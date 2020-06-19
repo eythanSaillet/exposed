@@ -4,20 +4,25 @@ include 'partials/header.php';
 
 include 'config/config.php';
 
+?>
+<div class="main">
+	<div class="grid"></div>
+</div>
+<?php
 
 // DB JSON INSERT
 
-$string = file_get_contents("sdqsdq.json");
+// $string = file_get_contents("sdqsdq.json");
 
-$json = json_decode($string);
+// $json = json_decode($string);
 
-foreach ($json as $val) {
-	$prepare = $pdo->prepare('
-	INSERT INTO sdqsdq (length, number)
-	VALUES (:length, :number)');
+// foreach ($json as $val) {
+// 	$prepare = $pdo->prepare('
+// 	INSERT INTO sdqsdq (length, number)
+// 	VALUES (:length, :number)');
 
-	$prepare->execute(array(':length' => (int) $val[0], ':number' => $val[1]));
-}
+// 	$prepare->execute(array(':length' => (int) $val[0], ':number' => $val[1]));
+// }
 
 // DB JSON INSERT
 

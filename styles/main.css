@@ -1,2 +1,39 @@
+:root {
+  --backgroundColor: #252530; }
+
 body {
-  background-color: pink; }
+  background-color: var(--backgroundColor);
+  margin: 0; }
+
+.grid {
+  overflow: hidden; }
+  .grid .row {
+    display: flex; }
+    .grid .row .cell {
+      width: 5.55vw;
+      height: 5.55vw;
+      background-color: var(--backgroundColor);
+      border-top: 1px solid var(--backgroundColor);
+      border-right: 1px solid var(--backgroundColor);
+      box-sizing: content-box;
+      position: relative; }
+      .grid .row .cell:first-child {
+        border-left: 1px solid var(--backgroundColor); }
+      .grid .row .cell:last-child:after {
+        content: '';
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background-image: url("../assets/gridCross.svg");
+        background-size: 100% 100%; }
+      .grid .row .cell:before {
+        content: '';
+        width: 15px;
+        height: 15px;
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        background-image: url("../assets/gridCross.svg");
+        background-size: 100% 100%; }
