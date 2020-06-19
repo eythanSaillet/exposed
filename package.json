@@ -1,0 +1,23 @@
+{
+	"name": "exposed",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"dependencies": {
+		"node-sass": "^4.14.1"
+	},
+	"devDependencies": {},
+	"scripts": {
+		"sass": "node-sass -rw scss -r -o styles"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/eythanSaillet/exposed.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/eythanSaillet/exposed/issues"
+	},
+	"homepage": "https://github.com/eythanSaillet/exposed#readme"
+}
