@@ -1,5 +1,6 @@
 :root {
 	--backgroundColor: #252530;
+	--backgroundColorLight: #2b2b36;
 }
 
 p {
@@ -41,7 +42,7 @@ body {
 			.cell {
 				width: 5.55vw;
 				height: 5.55vw;
-				background-color: var(--backgroundColor);
+				background: #252530;
 				border-top: 1px solid var(--backgroundColor);
 				border-right: 1px solid var(--backgroundColor);
 				box-sizing: content-box;
@@ -49,6 +50,9 @@ body {
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				&:hover {
+					background: var(--backgroundColorLight);
+				}
 				p {
 					font-family: 'Space Mono Regular';
 					font-size: 3.7vw;
@@ -58,12 +62,17 @@ body {
 				}
 				&:before {
 					content: '';
-					width: 15px;
-					height: 15px;
+					width: 1vw;
+					height: 1vw;
 					position: absolute;
-					top: -8px;
-					left: -8px;
+					top: calc(-0.5vw - 0.5px);
+					left: calc(-0.5vw - 0.5px);
 					background-size: 100% 100%;
+				}
+
+				// Menu
+				.menuButton {
+					width: 2.3vw;
 				}
 			}
 		}

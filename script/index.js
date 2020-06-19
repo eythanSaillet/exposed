@@ -5,20 +5,22 @@ grid = {
 	height: 20,
 
 	colorsClass: ['basicCross', 'redCross', 'yellowCross'],
+	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&()!?/*$¥€£##<>',
 
 	$grid: document.querySelector('.grid'),
 	$cellsMatrix: [],
 
 	setup() {
+		// Setup DOM grid
 		for (let i = 0; i < this.height; i++) {
-			$row = document.createElement('div')
+			let $row = document.createElement('div')
 			$row.classList.add('row')
 			let array = []
 			for (let j = 0; j < this.width; j++) {
-				$cell = document.createElement('div')
+				let $cell = document.createElement('div')
 				$cell.classList.add('cell', 'basicCross')
 
-				$p = document.createElement('p')
+				let $p = document.createElement('p')
 				$p.classList.add('letter')
 
 				$cell.appendChild($p)
@@ -28,11 +30,71 @@ grid = {
 			this.$grid.appendChild($row)
 			this.$cellsMatrix.push(array)
 		}
+
+		this.createMenu(15, 1)
+	},
+
+	createMenu(x, y) {
+		let cell = this.$cellsMatrix[y][x]
+		this.changeColor(x, y, 1)
+		cell.style.cursor = 'pointer'
+		// Insert the svg
+		let img = document.createElement('img')
+		img.classList.add('menuButton')
+		img.setAttribute('src', 'assets/menuButton.svg')
+		cell.appendChild(img)
+	},
+
+	displayWord({ x, y, word, minLength, maxLength, delay = 50 }) {
+		let indexes = []
+		for (let i = 0; i < word.length; i++) {
+			let random = Math.floor(Math.random() * word.length)
+			while (indexes.indexOf(random) != -1) {
+				random = Math.floor(Math.random() * word.length)
+			}
+			indexes.push(random)
+		}
+
+		let index = 0
+		let intervalID = setInterval(() => {
+			if (index < indexes.length) {
+				this.displayLetterWithGlitch({ x: x + indexes[index], y: y, letter: word[indexes[index]], minLength: minLength, maxLength: maxLength })
+				// TEMPO
+				this.changeColor(x + indexes[index], y, 2)
+				// TEMPO
+				index++
+			} else {
+				clearInterval(intervalID)
+			}
+		}, delay)
 	},
 
 	displayLetter(x, y, letter) {
-		cell = this.$cellsMatrix[y][x]
+		let cell = this.$cellsMatrix[y][x]
 		cell.querySelector('p').innerHTML = letter
+	},
+
+	displayLetterWithGlitch({ x, y, letter, minLength, maxLength, delay = 50 }) {
+		let cell = this.$cellsMatrix[y][x]
+		let randomLength = Math.round(Math.random() * (maxLength - minLength) + minLength)
+		let glitchStates = []
+		for (let i = 0; i < randomLength; i++) {
+			let randomCharacter = this.glitchCharacters[Math.floor(Math.random() * this.glitchCharacters.length)]
+			glitchStates.push(randomCharacter)
+		}
+		glitchStates.push(letter)
+
+		let index = 0
+		function glictchIteration() {
+			if (index < glitchStates.length) {
+				cell.querySelector('p').innerHTML = glitchStates[index]
+				setTimeout(() => {
+					index++
+					glictchIteration()
+				}, delay)
+			}
+		}
+		glictchIteration()
 	},
 
 	changeColor(x, y, color) {
@@ -72,18 +134,22 @@ grid = {
 }
 grid.setup()
 
-grid.displayLetter(0, 0, 'A')
-grid.displayLetter(2, 3, 'B')
-grid.displayLetter(5, 7, '%')
+// grid.displayLetterWithGlitch({ x: 1, y: 1, letter: 'J', minLength: 5, maxLength: 10 })
 
-grid.changeColor(0, 0, 1)
-grid.changeColor(5, 5, 2)
-grid.changeColor(18, 19, 1)
+// grid.displayLetter(0, 0, 'A')
+// grid.displayLetter(2, 3, 'B')
+// grid.displayLetter(5, 7, '%')
+
+grid.displayWord({ x: 2, y: 1, word: 'EXPOSED', minLength: 5, maxLength: 30, delay: 100 })
+
+// grid.changeColor(0, 0, 1)
+// grid.changeColor(5, 5, 2)
+// grid.changeColor(18, 19, 1)
 
 // Dynamic password search
 
 function showPasswords(index, search) {
-	var xmlhttp = new XMLHttpRequest()
+	let xmlhttp = new XMLHttpRequest()
 	xmlhttp.onreadystatechange = function () {
 		if (this.readyState == 4 && this.status == 200) {
 			// Get response here
