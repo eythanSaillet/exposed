@@ -2,48 +2,75 @@
 	--backgroundColor: #252530;
 }
 
-body {
-	background-color: var(--backgroundColor);
+p {
 	margin: 0;
 }
 
-.grid {
+body {
+	background-color: var(--backgroundColor);
+	margin: 0;
+	color: white;
+}
+
+.main {
 	overflow: hidden;
-	.row {
-		display: flex;
-		.cell {
-			width: 5.55vw;
-			height: 5.55vw;
-			background-color: var(--backgroundColor);
-			border-top: 1px solid var(--backgroundColor);
-			border-right: 1px solid var(--backgroundColor);
-			box-sizing: content-box;
-			position: relative;
-			&:first-child {
-				border-left: 1px solid var(--backgroundColor);
+	.grid {
+		width: 105.55vw;
+		overflow: hidden;
+		.row {
+			display: flex;
+
+			// Basic, red and yellow svg cross
+			.basicCross {
+				&:before {
+					background-image: url('../assets/gridCross.svg');
+				}
 			}
-			&:last-child {
-				&:after {
+			.redCross {
+				&:before {
+					background-image: url('../assets/gridCrossRed.svg');
+				}
+			}
+			.yellowCross {
+				&:before {
+					background-image: url('../assets/gridCrossYellow.svg');
+				}
+			}
+
+			// Cells
+			.cell {
+				width: 5.55vw;
+				height: 5.55vw;
+				background-color: var(--backgroundColor);
+				border-top: 1px solid var(--backgroundColor);
+				border-right: 1px solid var(--backgroundColor);
+				box-sizing: content-box;
+				position: relative;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				p {
+					font-family: 'Space Mono Regular';
+					font-size: 3.7vw;
+				}
+				&:first-child {
+					border-left: 1px solid var(--backgroundColor);
+				}
+				&:before {
 					content: '';
 					width: 15px;
 					height: 15px;
 					position: absolute;
 					top: -8px;
-					right: -8px;
-					background-image: url('../assets/gridCross.svg');
+					left: -8px;
 					background-size: 100% 100%;
 				}
 			}
-			&:before {
-				content: '';
-				width: 15px;
-				height: 15px;
-				position: absolute;
-				top: -8px;
-				left: -8px;
-				background-image: url('../assets/gridCross.svg');
-				background-size: 100% 100%;
-			}
 		}
 	}
+}
+
+@font-face {
+	font-family: 'Space Mono Regular';
+	src: url('../assets/fonts/spaceMono/SpaceMono-Regular.ttf');
 }
