@@ -11,7 +11,8 @@ body {
   color: white; }
 
 .main {
-  overflow: hidden; }
+  overflow: hidden;
+  position: relative; }
   .main .grid {
     width: 105.55vw;
     overflow: hidden; }
@@ -23,9 +24,11 @@ body {
         background-image: url("../assets/gridCrossRed.svg"); }
       .main .grid .row .yellowCross:before {
         background-image: url("../assets/gridCrossYellow.svg"); }
+      .main .grid .row .noCross:before {
+        background-image: none; }
       .main .grid .row .cell {
-        width: 5.55vw;
-        height: 5.55vw;
+        width: 5.555vw;
+        height: 5.555vw;
         background: #252530;
         border-top: 1px solid var(--backgroundColor);
         border-right: 1px solid var(--backgroundColor);
@@ -51,6 +54,8 @@ body {
           background-size: 100% 100%; }
         .main .grid .row .cell .menuButton {
           width: 2.3vw; }
+  .main .babyOverlay {
+    position: absolute; }
 
 @font-face {
   font-family: 'Space Mono Regular';

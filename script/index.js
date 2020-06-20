@@ -4,9 +4,10 @@ grid = {
 	width: 19,
 	height: 20,
 
-	colorsClass: ['basicCross', 'redCross', 'yellowCross'],
+	colorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
 	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&()!?/*$¥€£##<>',
 
+	$main: document.querySelector('.main'),
 	$grid: document.querySelector('.grid'),
 	$cellsMatrix: [],
 
@@ -131,8 +132,29 @@ grid = {
 			}
 		}
 	},
+
+	setupBabyOverlay({ x, y, width, height, color, className }) {
+		// Create element
+		let div = document.createElement('div')
+		div.classList.add('babyOverlay')
+		if (className) {
+			div.classList.add(className)
+		}
+
+		// Set position and size
+		div.style.background = color
+		div.style.left = `calc(1px + 5.555vw * ${x})`
+		div.style.top = `calc(1px + 5.555vw * ${y} + 1px * ${y})`
+		div.style.width = `calc(5.555vw * ${width} - 1.5px)`
+		div.style.height = `calc(5.555vw * ${height} + 1px * ${height - 1})`
+
+		// Append the element in the main
+		this.$main.appendChild(div)
+	},
 }
 grid.setup()
+
+grid.setupBabyOverlay({ x: 2, y: 3, width: 2, height: 2, color: 'var(--backgroundColor)' })
 
 // grid.displayLetterWithGlitch({ x: 1, y: 1, letter: 'J', minLength: 5, maxLength: 10 })
 
@@ -147,6 +169,10 @@ grid.displayWord({ x: 2, y: 1, word: 'EXPOSED', minLength: 5, maxLength: 30, del
 // grid.changeColor(18, 19, 1)
 
 // Dynamic password search
+
+let navigation = {
+	init() {},
+}
 
 function showPasswords(index, search) {
 	let xmlhttp = new XMLHttpRequest()

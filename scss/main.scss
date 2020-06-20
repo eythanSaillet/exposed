@@ -15,6 +15,7 @@ body {
 
 .main {
 	overflow: hidden;
+	position: relative;
 	.grid {
 		width: 105.55vw;
 		overflow: hidden;
@@ -37,11 +38,16 @@ body {
 					background-image: url('../assets/gridCrossYellow.svg');
 				}
 			}
+			.noCross {
+				&:before {
+					background-image: none;
+				}
+			}
 
 			// Cells
 			.cell {
-				width: 5.55vw;
-				height: 5.55vw;
+				width: 5.555vw;
+				height: 5.555vw;
 				background: #252530;
 				border-top: 1px solid var(--backgroundColor);
 				border-right: 1px solid var(--backgroundColor);
@@ -76,6 +82,12 @@ body {
 				}
 			}
 		}
+	}
+	.babyOverlay {
+		position: absolute;
+		// &:hover {
+		// 	background: var(--backgroundColorLight);
+		// }
 	}
 }
 
