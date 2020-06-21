@@ -7,7 +7,7 @@ grid = {
 	girdColorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
 	textColorsClass: ['red', 'yellow'],
 
-	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&()!?/*$¥€£#<>+-%@\\',
+	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§',
 
 	$main: document.querySelector('.main'),
 	$grid: document.querySelector('.grid'),
@@ -139,12 +139,16 @@ grid = {
 		}
 	},
 
-	setupBabyOverlay({ x, y, width, height, className, mouseEnterCall }) {
+	setupBabyOverlay({ x, y, width, height, className, content, mouseEnterCall, mouseLeaveCall, mouseClickCall }) {
 		// Create element
 		let div = document.createElement('div')
 		div.classList.add('babyOverlay')
 		if (className != undefined) {
 			div.classList.add(className)
+		}
+		// Append content
+		if (content != undefined) {
+			div.append(content)
 		}
 
 		// Set position and size
@@ -153,10 +157,20 @@ grid = {
 		div.style.width = `calc(5.555vw * ${width} - 1.5px)`
 		div.style.height = `calc(5.555vw * ${height} + 1px * ${height - 1})`
 
-		// Set the event on hover
+		// Set mouse's events
 		if (mouseEnterCall != undefined) {
-			div.addEventListener('mouseon', () => {
+			div.addEventListener('mouseenter', () => {
 				mouseEnterCall()
+			})
+		}
+		if (mouseLeaveCall != undefined) {
+			div.addEventListener('mouseleave', () => {
+				mouseLeaveCall()
+			})
+		}
+		if (mouseClickCall != undefined) {
+			div.addEventListener('click', () => {
+				mouseClickCall()
 			})
 		}
 
@@ -181,6 +195,7 @@ grid.setup()
 
 let navigation = {
 	input: '',
+	possibleInput: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§',
 
 	init() {
 		// Clear the grid colors
@@ -190,18 +205,16 @@ let navigation = {
 			}
 		}
 		// Display password enter interface
-		grid.displayWord({ x: 3, y: 4, word: 'ENTR', minLength: 5, maxLength: 15, delay: 250, gridColor: 0, color: 0 })
-		grid.changeGridColor(3, 3, 0, true)
+		grid.displayWord({ x: 3, y: 4, word: 'ENTR', minLength: 3, maxLength: 10, delay: 200, gridColor: 0, color: 0 })
+		grid.changeGridColor(3, 3, 0)
 		grid.$cellsMatrix[3][3].classList.add('lightBackCell')
 
 		// Create password input
 		let refCoord = [3, 3]
 		let coord = [3, 3]
-		let possibleInput = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ&()!?/\\*$¥€£#<>+-%@'
 		window.addEventListener('keydown', (_event) => {
-			console.log(possibleInput.indexOf(_event.code.toUpperCase()))
-			console.log(_event.code)
 			if (_event.code === 'Backspace') {
+				// Erase
 				this.input = this.input.substr(0, this.input.length - 1)
 				console.log(this.input)
 				if (coord[0] != refCoord[0]) {
@@ -214,8 +227,9 @@ let navigation = {
 					}
 				}
 				grid.$pMatrix[coord[1]][coord[0]].innerHTML = ''
-			} else if (possibleInput.indexOf(_event.key.toUpperCase()) != -1 && this.input.length < 8) {
-				this.input += _event.key.toUpperCase()
+			} else if (this.possibleInput.indexOf(_event.key.toUpperCase()) != -1 && this.input.length < 8) {
+				// Write
+				this.input += _event.key
 				grid.$pMatrix[coord[1]][coord[0]].innerHTML = '*'
 				grid.$cellsMatrix[coord[1]][coord[0]].classList.remove('lightBackCell')
 				coord[0]++
@@ -226,15 +240,30 @@ let navigation = {
 				}
 			}
 		})
+
+		// Create "Enter the password" text
+		let p = (document.createElement('p').innerHTML = 'Enter the password')
+		grid.setupBabyOverlay({ x: 3, y: 2, width: 4, height: 1, className: 'textBabyOverlay', content: p })
+
+		// Create hover glitch effect
+		function mouseEnterEntrButton() {
+			grid.displayWord({ x: 3, y: 4, word: 'ENTR', minLength: 0, maxLength: 5, delay: 10, gridColor: 0, color: 0 })
+			for (let i = 0; i < 4; i++) {
+				grid.$cellsMatrix[4][i + 3].style.background = 'var(--backgroundColorLight)'
+			}
+		}
+		function mouseLeaveEntrButton() {
+			for (let i = 0; i < 4; i++) {
+				grid.$cellsMatrix[4][i + 3].style.background = 'var(--backgroundColor)'
+			}
+		}
+		function mouseClickEntrButton() {
+			console.log('hahahahahah')
+		}
+		grid.setupBabyOverlay({ x: 3, y: 4, width: 4, height: 1, className: 'pointerBabyOverlay', mouseEnterCall: mouseEnterEntrButton, mouseLeaveCall: mouseLeaveEntrButton, mouseClickCall: mouseClickEntrButton })
 	},
 }
 navigation.init()
-
-// function log() {
-// 	console.log('hey')
-// }
-
-// grid.setupBabyOverlay({ x: 2, y: 7, width: 4, height: 1, className: 'testBabyOverlay', log })
 
 // Dynamic password search
 function showPasswords(index, search) {

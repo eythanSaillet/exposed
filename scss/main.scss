@@ -115,6 +115,15 @@ body {
 			background: var(--backgroundColorLight);
 		}
 	}
+	.pointerBabyOverlay {
+		cursor: pointer;
+	}
+	.textBabyOverlay {
+		display: flex;
+		align-items: center;
+		font-family: 'Space Mono Regular';
+		font-size: 1vw;
+	}
 	.testBabyOverlay {
 		background: lightblue;
 		cursor: pointer;

@@ -75,6 +75,13 @@ body {
     background: var(--backgroundColor); }
     .main .basicBabyOverlay:hover {
       background: var(--backgroundColorLight); }
+  .main .pointerBabyOverlay {
+    cursor: pointer; }
+  .main .textBabyOverlay {
+    display: flex;
+    align-items: center;
+    font-family: 'Space Mono Regular';
+    font-size: 1vw; }
   .main .testBabyOverlay {
     background: lightblue;
     cursor: pointer; }
