@@ -1,6 +1,8 @@
 :root {
   --backgroundColor: #252530;
-  --backgroundColorLight: #2b2b36; }
+  --backgroundColorLight: #2b2b36;
+  --red: #ff4655;
+  --yellow: #fdfd96; }
 
 p {
   margin: 0; }
@@ -8,11 +10,14 @@ p {
 body {
   background-color: var(--backgroundColor);
   margin: 0;
-  color: white; }
+  color: white;
+  position: relative;
+  height: 100vh;
+  overflow: hidden; }
 
 .main {
   overflow: hidden;
-  position: relative; }
+  position: absolute; }
   .main .grid {
     width: 105.55vw;
     overflow: hidden; }
@@ -41,7 +46,13 @@ body {
           background: var(--backgroundColorLight); }
         .main .grid .row .cell p {
           font-family: 'Space Mono Regular';
-          font-size: 3.7vw; }
+          font-size: 3.7vw;
+          user-select: none;
+          pointer-events: none; }
+        .main .grid .row .cell p.red {
+          color: var(--red); }
+        .main .grid .row .cell p.yellow {
+          color: var(--yellow); }
         .main .grid .row .cell:first-child {
           border-left: 1px solid var(--backgroundColor); }
         .main .grid .row .cell:before {
@@ -54,8 +65,19 @@ body {
           background-size: 100% 100%; }
         .main .grid .row .cell .menuButton {
           width: 2.3vw; }
+      .main .grid .row .noHoverReaction:hover {
+        background-color: var(--backgroundColor); }
+      .main .grid .row .lightBackCell {
+        background-color: var(--backgroundColorLight); }
   .main .babyOverlay {
     position: absolute; }
+  .main .basicBabyOverlay {
+    background: var(--backgroundColor); }
+    .main .basicBabyOverlay:hover {
+      background: var(--backgroundColorLight); }
+  .main .testBabyOverlay {
+    background: lightblue;
+    cursor: pointer; }
 
 @font-face {
   font-family: 'Space Mono Regular';

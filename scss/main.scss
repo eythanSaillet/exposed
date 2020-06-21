@@ -1,6 +1,8 @@
 :root {
 	--backgroundColor: #252530;
 	--backgroundColorLight: #2b2b36;
+	--red: #ff4655;
+	--yellow: #fdfd96;
 }
 
 p {
@@ -11,11 +13,14 @@ body {
 	background-color: var(--backgroundColor);
 	margin: 0;
 	color: white;
+	position: relative;
+	height: 100vh;
+	overflow: hidden;
 }
 
 .main {
 	overflow: hidden;
-	position: relative;
+	position: absolute;
 	.grid {
 		width: 105.55vw;
 		overflow: hidden;
@@ -62,6 +67,14 @@ body {
 				p {
 					font-family: 'Space Mono Regular';
 					font-size: 3.7vw;
+					user-select: none;
+					pointer-events: none;
+				}
+				p.red {
+					color: var(--red);
+				}
+				p.yellow {
+					color: var(--yellow);
 				}
 				&:first-child {
 					border-left: 1px solid var(--backgroundColor);
@@ -81,13 +94,30 @@ body {
 					width: 2.3vw;
 				}
 			}
+			.noHoverReaction {
+				&:hover {
+					background-color: var(--backgroundColor);
+				}
+			}
+			.lightBackCell {
+				background-color: var(--backgroundColorLight);
+			}
 		}
 	}
+
+	// Baby overlays
 	.babyOverlay {
 		position: absolute;
-		// &:hover {
-		// 	background: var(--backgroundColorLight);
-		// }
+	}
+	.basicBabyOverlay {
+		background: var(--backgroundColor);
+		&:hover {
+			background: var(--backgroundColorLight);
+		}
+	}
+	.testBabyOverlay {
+		background: lightblue;
+		cursor: pointer;
 	}
 }
 
