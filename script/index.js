@@ -157,7 +157,7 @@ grid = {
 		div.style.width = `calc(5.555vw * ${width} - 1.5px)`
 		div.style.height = `calc(5.555vw * ${height} + 1px * ${height - 1})`
 
-		// Set mouse's events
+		// Set mouse events
 		if (mouseEnterCall != undefined) {
 			div.addEventListener('mouseenter', () => {
 				mouseEnterCall()
@@ -176,6 +176,23 @@ grid = {
 
 		// Append the element in the main
 		this.$main.appendChild(div)
+	},
+
+	setupLoadingAnimation(x, y, delay) {
+		let p = this.$pMatrix[y][x]
+		let loadingCharacters = ['|', '/', '-', '\\']
+		let index = 0
+		p.innerHTML = loadingCharacters[index]
+		loadingAnimationIteration = () => {
+			if (p.innerHTML === loadingCharacters[index]) {
+				index === loadingCharacters.length - 1 ? (index = 0) : index++
+				p.innerHTML = loadingCharacters[index]
+				setTimeout(() => {
+					loadingAnimationIteration()
+				}, delay)
+			}
+		}
+		loadingAnimationIteration()
 	},
 }
 grid.setup()
@@ -264,6 +281,11 @@ let navigation = {
 	},
 }
 navigation.init()
+
+grid.setupLoadingAnimation(0, 0, 100)
+setTimeout(() => {
+	grid.$pMatrix[0][0].innerHTML = ''
+}, 10000)
 
 // Dynamic password search
 function showPasswords(index, search) {
