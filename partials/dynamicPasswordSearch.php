@@ -10,7 +10,7 @@ if ($_GET) {
     $search = $_GET['search'];
 }
 
-$query = $pdo->query('SELECT password FROM combos WHERE password LIKE "%'.$search.'%" LIMIT 2 OFFSET '.$index * 2);
+$query = $pdo->query('SELECT password FROM combos WHERE password LIKE "%'.$search.'%" LIMIT 100 OFFSET '.$index * 2);
 
 $data = $query->fetchAll();
 

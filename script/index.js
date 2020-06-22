@@ -11,8 +11,10 @@ grid = {
 
 	$main: document.querySelector('.main'),
 	$grid: document.querySelector('.grid'),
+	$cellsArray: [],
 	$cellsMatrix: [],
 	$pMatrix: [],
+	$babyOverlays: [],
 
 	setup() {
 		// Setup DOM grid
@@ -30,6 +32,7 @@ grid = {
 
 				$cell.appendChild($p)
 				$row.appendChild($cell)
+				this.$cellsArray.push($cell)
 				cellsArray.push($cell)
 				pArray.push($p)
 			}
@@ -37,7 +40,6 @@ grid = {
 			this.$cellsMatrix.push(cellsArray)
 			this.$pMatrix.push(pArray)
 		}
-		// this.createMenu(15, 1)
 	},
 
 	createMenu(x, y) {
@@ -174,13 +176,14 @@ grid = {
 			})
 		}
 
-		// Append the element in the main
+		// Append the element in the main & store it in an array
 		this.$main.appendChild(div)
+		this.$babyOverlays.push(div)
 	},
 
 	setupLoadingAnimation(x, y, delay) {
 		let p = this.$pMatrix[y][x]
-		let loadingCharacters = ['|', '/', '-', '\\']
+		let loadingCharacters = ['|', '/', '―', '\\']
 		let index = 0
 		p.innerHTML = loadingCharacters[index]
 		loadingAnimationIteration = () => {
@@ -212,80 +215,167 @@ grid.setup()
 
 let navigation = {
 	input: '',
-	possibleInput: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§',
+	possibleInput: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§\'"`,:;.{}=',
+	actualY: 0,
+	isLoading: false,
+
+	analyzedPassword: {},
+
+	// Creating init interface
 
 	init() {
-		// Clear the grid colors
+		// Hide the grid
 		for (let i = 0; i < grid.width; i++) {
 			for (let j = 0; j < grid.height; j++) {
 				grid.changeGridColor(i, j, 3)
 			}
 		}
 		// Display password enter interface
-		grid.displayWord({ x: 3, y: 4, word: 'ENTR', minLength: 3, maxLength: 10, delay: 200, gridColor: 0, color: 0 })
-		grid.changeGridColor(3, 3, 0)
-		grid.$cellsMatrix[3][3].classList.add('lightBackCell')
+		grid.displayWord({ x: 2, y: 4, word: 'ENTR', minLength: 3, maxLength: 10, delay: 200, gridColor: 0, color: 0 })
+		grid.changeGridColor(2, 3, 0)
+		grid.$cellsMatrix[3][2].classList.add('lightBackCell')
 
 		// Create password input
-		let refCoord = [3, 3]
-		let coord = [3, 3]
+		let refCoord = [2, 3]
+		let coord = [2, 3]
 		window.addEventListener('keydown', (_event) => {
-			if (_event.code === 'Backspace') {
-				// Erase
-				this.input = this.input.substr(0, this.input.length - 1)
-				console.log(this.input)
-				if (coord[0] != refCoord[0]) {
-					grid.$cellsMatrix[coord[1]][coord[0]].classList.remove('lightBackCell')
-					grid.changeGridColor(coord[0] + 1, coord[1], 3)
-					coord[0]--
-					grid.$cellsMatrix[coord[1]][coord[0]].classList.add('lightBackCell')
-					for (let i = 0; i < 4; i++) {
-						grid.changeGridColor(3 + i, 4, 0)
+			if (!this.isLoading) {
+				if (_event.code === 'Backspace') {
+					// Erase
+					this.input = this.input.substr(0, this.input.length - 1)
+					if (coord[0] != refCoord[0]) {
+						grid.$cellsMatrix[coord[1]][coord[0]].classList.remove('lightBackCell')
+						grid.changeGridColor(coord[0] + 1, coord[1], 3)
+						coord[0]--
+						grid.$cellsMatrix[coord[1]][coord[0]].classList.add('lightBackCell')
+						for (let i = 0; i < 4; i++) {
+							grid.changeGridColor(2 + i, 4, 0)
+						}
 					}
-				}
-				grid.$pMatrix[coord[1]][coord[0]].innerHTML = ''
-			} else if (this.possibleInput.indexOf(_event.key.toUpperCase()) != -1 && this.input.length < 8) {
-				// Write
-				this.input += _event.key
-				grid.$pMatrix[coord[1]][coord[0]].innerHTML = '*'
-				grid.$cellsMatrix[coord[1]][coord[0]].classList.remove('lightBackCell')
-				coord[0]++
-				console.log(this.input)
-				if (this.input.length < 8) {
-					grid.changeGridColor(coord[0], coord[1], 0)
-					grid.$cellsMatrix[coord[1]][coord[0]].classList.add('lightBackCell')
+					grid.$pMatrix[coord[1]][coord[0]].innerHTML = ''
+				} else if (this.possibleInput.indexOf(_event.key.toUpperCase()) != -1 && this.input.length < 8) {
+					// Write
+					this.input += _event.key
+					grid.$pMatrix[coord[1]][coord[0]].innerHTML = '*'
+					grid.$cellsMatrix[coord[1]][coord[0]].classList.remove('lightBackCell')
+					coord[0]++
+					if (this.input.length < 8) {
+						grid.changeGridColor(coord[0], coord[1], 0)
+						grid.$cellsMatrix[coord[1]][coord[0]].classList.add('lightBackCell')
+					}
 				}
 			}
 		})
 
 		// Create "Enter the password" text
 		let p = (document.createElement('p').innerHTML = 'Enter the password')
-		grid.setupBabyOverlay({ x: 3, y: 2, width: 4, height: 1, className: 'textBabyOverlay', content: p })
+		grid.setupBabyOverlay({ x: 2, y: 2, width: 4, height: 1, className: 'textBabyOverlay', content: p })
 
-		// Create hover glitch effect
-		function mouseEnterEntrButton() {
-			grid.displayWord({ x: 3, y: 4, word: 'ENTR', minLength: 0, maxLength: 5, delay: 10, gridColor: 0, color: 0 })
+		// Create mouse events function
+		mouseEnterEntrButton = () => {
+			grid.displayWord({ x: 2, y: 4, word: 'ENTR', minLength: 0, maxLength: 5, delay: 10, gridColor: 0, color: 0 })
 			for (let i = 0; i < 4; i++) {
-				grid.$cellsMatrix[4][i + 3].style.background = 'var(--backgroundColorLight)'
+				grid.$cellsMatrix[4][i + 2].classList.add('lightBackCell')
 			}
 		}
-		function mouseLeaveEntrButton() {
+		mouseLeaveEntrButton = () => {
 			for (let i = 0; i < 4; i++) {
-				grid.$cellsMatrix[4][i + 3].style.background = 'var(--backgroundColor)'
+				grid.$cellsMatrix[4][i + 2].classList.remove('lightBackCell')
 			}
 		}
-		function mouseClickEntrButton() {
-			console.log('hahahahahah')
+		mouseClickEntrButton = () => {
+			if (this.input.length > 0) {
+				this.displaySearch(this.input)
+			}
 		}
-		grid.setupBabyOverlay({ x: 3, y: 4, width: 4, height: 1, className: 'pointerBabyOverlay', mouseEnterCall: mouseEnterEntrButton, mouseLeaveCall: mouseLeaveEntrButton, mouseClickCall: mouseClickEntrButton })
+
+		// Setup the mouse events trigger div
+		grid.setupBabyOverlay({ x: 2, y: 4, width: 4, height: 1, className: 'pointerBabyOverlay', mouseEnterCall: mouseEnterEntrButton, mouseLeaveCall: mouseLeaveEntrButton, mouseClickCall: mouseClickEntrButton })
+	},
+
+	// Display information after password search
+
+	displaySearch(input) {
+		this.isLoading = true
+
+		// Kill baby overlays
+		for (let i = grid.$babyOverlays.length - 1; i >= 0; i--) {
+			grid.$main.removeChild(grid.$babyOverlays[i])
+			grid.$babyOverlays.pop()
+		}
+		// Display input
+		grid.displayWord({ x: 2, y: 3, word: this.input, minLength: 5, maxLength: 25, delay: 300 })
+
+		// Display grid
+		// A REFAIRE PTN AVEC DU STAGGER
+		for (let i = 0; i < grid.width; i++) {
+			for (let j = 0; j < grid.height; j++) {
+				grid.changeGridColor(i, j, 0)
+				grid.$cellsMatrix[j][i].classList.remove('lightBackCell')
+			}
+		}
+		// Display title
+		grid.displayWord({ x: 2, y: 1, word: 'SEARCH', minLength: 3, maxLength: 10, delay: 200, gridColor: 2 })
+
+		// Display menu
+		grid.createMenu(15, 1)
+
+		// Display loader
+		grid.displayWord({ x: 2, y: 6, word: 'LOADING', minLength: 3, maxLength: 10, delay: 200 })
+		grid.setupLoadingAnimation(10, 6, 100)
+
+		// Analyze password
+		this.analyzePassword(this.input)
+
+		// gsap.to(grid.$cellsArray, {
+		// 	background: 'red',
+		// 	// stagger: {
+		// 	// 	each: 0.1,
+		// 	// 	from: 19 * 4 + 4,
+		// 	// 	grid: 'auto',
+		// 	// },
+		// 	stagger: {
+		// 		each: 0.1,
+		// 		from: 1,
+		// 		grid: 'auto',
+		// 		onComplete: (index) => {
+		// 			test(index)
+		// 		},
+		// 	},
+		// })
+	},
+
+	analyzePassword(input) {
+		// Analyse password with regex
+		let upperCases = input.match(/[A-Z]/g)
+		let lowerCases = input.match(/[a-z]/g)
+		let specialCharacters = input.match(/[&()!?/\\*$¥€£#<>+\-%@§\'"`,:;.{}=]/g)
+		let numbers = input.match(/[0-9]/g)
+
+		// Define analyzedPassword with analyze result
+		input.length < 8 ? (this.correctLength = false) : (this.correctLength = true)
+		upperCases === null ? (this.upperCases = false) : (this.upperCases = true)
+		lowerCases === null ? (this.lowerCases = false) : (this.lowerCases = true)
+		specialCharacters === null ? (this.specialCharacters = false) : (this.specialCharacters = true)
+		numbers === null ? (this.numbers = false) : (this.numbers = true)
+
+		// Compare to the database
+		let xmlhttp = new XMLHttpRequest()
+		xmlhttp.onreadystatechange = function () {
+			if (this.readyState == 4 && this.status == 200) {
+				// Get response here
+				console.log(this.response)
+				this.databaseResponse = this.response
+				// DISPLAY SEARCH INFOS
+			}
+		}
+		xmlhttp.open('GET', `partials/passwordSearch.php?search=${input}`, true)
+		xmlhttp.send()
 	},
 }
 navigation.init()
 
-grid.setupLoadingAnimation(0, 0, 100)
-setTimeout(() => {
-	grid.$pMatrix[0][0].innerHTML = ''
-}, 10000)
+// grid.setupLoadingAnimation(0, 0, 100)
 
 // Dynamic password search
 function showPasswords(index, search) {
@@ -296,6 +386,6 @@ function showPasswords(index, search) {
 			console.log(this.response)
 		}
 	}
-	xmlhttp.open('GET', `partials/scrollDisplay.php?index=${index}&search=${search}`, true)
+	xmlhttp.open('GET', `partials/dynamicPasswordSearch.php?index=${index}&search=${search}`, true)
 	xmlhttp.send()
 }
