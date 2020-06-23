@@ -7,7 +7,7 @@ window.onbeforeunload = function () {
 
 grid = {
 	width: 19,
-	height: 20,
+	height: 40,
 
 	girdColorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
 	textColorsClass: ['red', 'yellow', 'green'],
@@ -229,6 +229,13 @@ let navigation = {
 	possibleInput: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§\'"`,:;.{}=',
 	actualY: 0,
 	isLoading: false,
+	searchErrorsData: {
+		lowerCases: ['NO LOWERCASE', ''],
+		upperCases: ['NO UPPERCASE', ''],
+		length: ['PASSWORD TOO SHORT', ''],
+		numbers: ['NO NUMBERS', ''],
+		specialCharacters: ['NO SPECIAL CHARACTER', ''],
+	},
 
 	analyzedPassword: {},
 
@@ -315,7 +322,7 @@ let navigation = {
 			grid.$babyOverlays.pop()
 		}
 		// Display input
-		grid.displayWord({ x: 2, y: 3, word: this.input, minLength: 5, maxLength: 25, delay: 300 })
+		grid.displayWord({ x: 2, y: 3, word: this.input, minLength: 3, maxLength: 10, delay: 200 })
 
 		// Display grid
 		// A REFAIRE PTN AVEC DU STAGGER
@@ -354,18 +361,22 @@ let navigation = {
 		// Unlock scroll
 		document.querySelector('body').style.overflowY = 'visible'
 
-		this.actualY += 2
+		this.actualY += 3
 
 		// Display password strength
+		let label = document.createElement('p')
+		label.innerHTML = 'PASSWORD TOO EASY'
+		grid.setupBabyOverlay({ x: 2, y: this.actualY - 1, width: 6, height: 1, className: 'redLabelBabyOverlay', content: label })
 		let displayPasswordStrength = () => {
-			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.2, { opacity: 1 })
+			gsap.to(label, 0.4, { opacity: 1 })
+			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.4, { opacity: 1 })
 			gsap.to(document.querySelector('.passwordResponseBabyOverlay .bar'), 1, { width: `${this.analyzedPassword.strength}%` })
 			let number = { value: 0 }
 			let $number = document.querySelector('.passwordResponseBabyOverlay .number')
 			gsap.to(number, 1, {
 				value: this.analyzedPassword.strength,
 				onUpdate: () => {
-					$number.innerHTML = `${number.value.toFixed(1)}%`
+					$number.innerHTML = `${Math.round(number.value)}%`
 				},
 			})
 		}
@@ -375,21 +386,97 @@ let navigation = {
 
 		// Display number of errors
 		let numberOfErrors = 0
-		!this.analyzedPassword.lowerCases ? numberOfErrors++ : null
-		!this.analyzedPassword.upperCases ? numberOfErrors++ : null
-		!this.analyzedPassword.correctLength ? numberOfErrors++ : null
-		!this.analyzedPassword.numbers ? numberOfErrors++ : null
-		!this.analyzedPassword.specialCharacters ? numberOfErrors++ : null
+		let errors = []
+		if (!this.analyzedPassword.length) {
+			numberOfErrors++
+			errors.push('length')
+		}
+		if (!this.analyzedPassword.lowerCases) {
+			numberOfErrors++
+			errors.push('lowerCases')
+		}
+		if (!this.analyzedPassword.upperCases) {
+			numberOfErrors++
+			errors.push('upperCases')
+		}
+		if (!this.analyzedPassword.numbers) {
+			numberOfErrors++
+			errors.push('numbers')
+		}
+		if (!this.analyzedPassword.specialCharacters) {
+			numberOfErrors++
+			errors.push('specialCharacters')
+		}
 
+		let y = this.actualY
 		let displayNumberOfErrors = () => {
-			grid.displayWord({ x: 2, y: this.actualY, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
-			grid.displayWord({ x: 4, y: this.actualY, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
-			grid.displayWord({ x: 11, y: this.actualY, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
+			grid.displayWord({ x: 2, y: y, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
+			grid.displayWord({ x: 4, y: y, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
+			grid.displayWord({ x: 11, y: y, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
 		}
 		scrollDidsplayer.add(11, displayNumberOfErrors)
+
+		this.actualY += 2
+
+		let $errorComponent = document.querySelector('.errorsDisplayBabyOverlay')
+		for (const _error of errors) {
+			// Create label
+			let $label = document.createElement('p')
+			$label.innerHTML = this.searchErrorsData[_error][0]
+			grid.setupBabyOverlay({ x: 2, y: this.actualY, width: 6, height: 1, className: 'redLabelBabyOverlay', content: $label })
+
+			// Clone Component
+			let $errorDiv = $errorComponent.cloneNode(true)
+
+			// Set position
+			$errorDiv.style.left = `calc(1px + 5.555vw * ${2})`
+			$errorDiv.style.top = `calc(1px + 5.555vw * ${this.actualY + 1} + 1px * ${this.actualY + 1})`
+
+			// Set properties
+			$errorDiv.querySelector('.oldPassword').innerHTML = this.analyzedPassword.password
+			$errorDiv.querySelector('.newPassword').innerHTML = this.analyzedPassword.correction[_error].password
+
+			// Display and append
+			$errorDiv.style.display = 'flex'
+			grid.$main.append($errorDiv)
+			this.actualY += 4
+
+			// Setup scroll displayer
+			let displayErrorDiv = () => {
+				// Display overlay
+				gsap.to($errorDiv, 0.4, { opacity: 1 })
+				gsap.to($label, 0.4, { opacity: 1 })
+
+				// Display strength bars
+				gsap.to($errorDiv.querySelector('.oldStrength .bar'), 1, { scaleX: this.analyzedPassword.strength / 100 })
+				gsap.to($errorDiv.querySelector('.newStrength .bar'), 1, { scaleX: this.analyzedPassword.correction[_error].strength / 100 })
+
+				// Display strength values
+				let strengths = { old: 0, new: 0 }
+				let $numbers = {
+					old: $errorDiv.querySelector('.oldStrength .number'),
+					new: $errorDiv.querySelector('.newStrength .number'),
+				}
+				gsap.to(strengths, 1, {
+					old: 10,
+					onUpdate: () => {
+						$numbers.old.innerHTML = `${Math.round(strengths.old)}%`
+					},
+				})
+				gsap.to(strengths, 1, {
+					new: this.analyzedPassword.correction[_error].strength,
+					onUpdate: () => {
+						$numbers.new.innerHTML = `${Math.round(strengths.new)}%`
+					},
+				})
+			}
+			scrollDidsplayer.add(this.actualY, displayErrorDiv)
+		}
 	},
 
 	analyzePassword(input) {
+		this.analyzedPassword.password = input
+
 		// Analyse password with regex
 		let upperCases = input.match(/[A-Z]/g)
 		let lowerCases = input.match(/[a-z]/g)
@@ -397,7 +484,7 @@ let navigation = {
 		let numbers = input.match(/[0-9]/g)
 
 		// Define analyzedPassword with analyze result
-		input.length < 8 ? (this.analyzedPassword.correctLength = false) : (this.analyzedPassword.correctLength = true)
+		input.length < 8 ? (this.analyzedPassword.length = false) : (this.analyzedPassword.length = true)
 		upperCases === null ? (this.analyzedPassword.upperCases = false) : (this.analyzedPassword.upperCases = true)
 		lowerCases === null ? (this.analyzedPassword.lowerCases = false) : (this.analyzedPassword.lowerCases = true)
 		specialCharacters === null ? (this.analyzedPassword.specialCharacters = false) : (this.analyzedPassword.specialCharacters = true)
@@ -405,6 +492,78 @@ let navigation = {
 
 		// Calculate password strength
 		this.analyzedPassword.strength = new PasswordMeter().getResult(input).percent
+
+		// Recreate new passwords
+		let lowerCasesArray = 'abcdefghijklmnopqrstuvwxyz'
+		let upperCasesArray = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+		let numbersArray = '0123456789'
+		let specialCharactersArray = '&()!?/\\*$¥€£#<>+-%@§\'"`,:;.{}='
+
+		this.analyzedPassword.correction = {}
+		let newPassword = input
+
+		// Length
+		if (!this.analyzedPassword.length) {
+			let numberToAdd = 8 - newPassword.length
+			for (let index = 0; index < numberToAdd; index++) {
+				let randomLetter = lowerCasesArray[Math.floor(Math.random() * lowerCasesArray.length)]
+				newPassword = newPassword.concat(randomLetter)
+			}
+			this.analyzedPassword.correction.length = {}
+			this.analyzedPassword.correction.length.password = newPassword
+			this.analyzedPassword.correction.length.strength = new PasswordMeter().getResult(newPassword).percent
+		}
+		// Lower cases
+		if (!this.analyzedPassword.lowerCases && this.analyzedPassword.length) {
+			let randomLetter = lowerCasesArray[Math.floor(Math.random() * lowerCasesArray.length)]
+			newPassword = newPassword.concat(randomLetter)
+
+			this.analyzedPassword.correction.lowerCases = {}
+			this.analyzedPassword.correction.lowerCases.password = newPassword
+			this.analyzedPassword.correction.lowerCases.strength = new PasswordMeter().getResult(newPassword).percent
+		}
+		// Upper cases
+		if (!this.analyzedPassword.upperCases) {
+			let randomPos = Math.floor(Math.random() * newPassword.length)
+			while (newPassword[randomPos] === newPassword[randomPos].toUpperCase()) {
+				randomPos = Math.floor(Math.random() * newPassword.length)
+			}
+
+			newPassword = newPassword.replace(newPassword[randomPos], newPassword[randomPos].toUpperCase())
+
+			this.analyzedPassword.correction.upperCases = {}
+			this.analyzedPassword.correction.upperCases.password = newPassword
+			this.analyzedPassword.correction.upperCases.strength = new PasswordMeter().getResult(newPassword).percent
+		}
+		// Numbers
+		if (!this.analyzedPassword.numbers) {
+			let randomNumber = numbersArray[Math.floor(Math.random() * numbersArray.length)]
+			newPassword = newPassword.concat(randomNumber)
+
+			this.analyzedPassword.correction.numbers = {}
+			this.analyzedPassword.correction.numbers.password = newPassword
+			this.analyzedPassword.correction.numbers.strength = new PasswordMeter().getResult(newPassword).percent
+		}
+		// Specialcharacters
+		if (!this.analyzedPassword.specialCharacters) {
+			let passwordRef = newPassword
+
+			newPassword = newPassword.replace('a', '@')
+			newPassword = newPassword.replace('i', '!')
+			newPassword = newPassword.replace('l', '/')
+			newPassword = newPassword.replace('e', '€')
+			newPassword = newPassword.replace('y', '¥')
+			newPassword = newPassword.replace('s', '$')
+
+			if (passwordRef === newPassword) {
+				let randomSpecialCharacter = specialCharactersArray[Math.floor(Math.random() * specialCharactersArray.length)]
+				newPassword = newPassword.concat(randomSpecialCharacter)
+			}
+
+			this.analyzedPassword.correction.specialCharacters = {}
+			this.analyzedPassword.correction.specialCharacters.password = newPassword
+			this.analyzedPassword.correction.specialCharacters.strength = new PasswordMeter().getResult(newPassword).percent
+		}
 
 		// Compare to the database
 		let xmlhttp = new XMLHttpRequest()
@@ -424,18 +583,12 @@ let navigation = {
 }
 navigation.init()
 
-grid.setupBabyOverlay({ x: 2, y: 15, width: 4, height: 1, className: 'testBabyOverlay' })
-
 let scrollDidsplayer = {
 	targets: [],
 
 	setup() {
 		window.addEventListener('scroll', () => {
-			// console.log(window.scrollY + window.innerHeight)
-
 			for (const _target of this.targets) {
-				// console.log(0.0555 * window.innerWidth, document.querySelector('.main .grid .row .cell').getBoundingClientRect().height)
-				// console.log(_target[0] * 0.0555 * window.innerWidth - 0.0555 * window.innerWidth + _target[0] * 2)
 				if (window.scrollY + window.innerHeight > _target[0] * 0.0555 * window.innerWidth - 0.0555 * window.innerWidth && !_target[2]) {
 					_target[2] = true
 					_target[1]()

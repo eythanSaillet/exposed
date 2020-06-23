@@ -36,6 +36,8 @@ body {
         width: 5.555vw;
         height: 5.555vw;
         background: #252530;
+        border-top: 1px solid var(--backgroundColor);
+        border-right: 1px solid var(--backgroundColor);
         position: relative;
         display: flex;
         justify-content: center;
@@ -82,24 +84,25 @@ body {
     display: flex;
     align-items: center;
     font-size: 1vw; }
-  .main .passwordResponseBabyOverlay {
-    left: calc(1px + 5.555vw * 2);
-    top: calc(5.555vw * 8);
-    width: calc(5.555vw * 14 - 1.5px);
-    height: calc(5.555vw * 2 - 1px);
+  .main .searchInfoBabyOverlay {
     background: var(--backgroundColorLight);
     display: flex;
     justify-content: center;
-    align-items: center;
-    opacity: 0; }
-    .main .passwordResponseBabyOverlay .textContainer {
+    align-items: center; }
+    .main .searchInfoBabyOverlay .textContainer {
       width: calc(60% - 5.55vw / 2);
       height: 80%;
       display: flex;
       align-items: center; }
-      .main .passwordResponseBabyOverlay .textContainer .text {
+      .main .searchInfoBabyOverlay .textContainer .text {
         margin: 0;
         font-size: 1.7vw; }
+  .main .passwordResponseBabyOverlay {
+    left: calc(1px * 2 + 5.555vw * 2 + 1px);
+    top: calc(1px + 5.555vw * 9 + 1px * 9);
+    width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
+    height: calc(5.555vw * 2 + 1px * (2 - 1));
+    opacity: 0; }
     .main .passwordResponseBabyOverlay .strengthContainer {
       width: calc(40% - 5.55vw / 2);
       height: 80%;
@@ -131,6 +134,60 @@ body {
             top: 0;
             left: 0;
             background: var(--blue); }
+  .main .errorsDisplayBabyOverlay {
+    left: calc(1px * 4px + 5.555vw * 2);
+    top: calc(1px + 5.555vw * 11 + 1px * 11);
+    width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
+    height: calc(5.555vw * 2 + 1px * (2 - 1));
+    display: none;
+    opacity: 0; }
+    .main .errorsDisplayBabyOverlay .textContainer .text {
+      font-size: 1.3vw; }
+    .main .errorsDisplayBabyOverlay .strengthContainer {
+      width: calc(40% - 5.55vw / 2);
+      height: 80%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center; }
+      .main .errorsDisplayBabyOverlay .strengthContainer .strength {
+        width: 70%;
+        height: 45%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around; }
+        .main .errorsDisplayBabyOverlay .strengthContainer .strength .label {
+          font-size: 1.7vw;
+          margin-bottom: 5px; }
+        .main .errorsDisplayBabyOverlay .strengthContainer .strength .barContainer {
+          width: 100%;
+          height: 40%;
+          background: var(--backgroundColor);
+          position: relative; }
+          .main .errorsDisplayBabyOverlay .strengthContainer .strength .barContainer .number {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            font-size: 1.2vw;
+            margin-left: 5px;
+            transform: translateY(-50%); }
+          .main .errorsDisplayBabyOverlay .strengthContainer .strength .barContainer .bar {
+            width: 100%;
+            height: 100%;
+            transform-origin: left;
+            transform: scaleX(0); }
+      .main .errorsDisplayBabyOverlay .strengthContainer .oldStrength .bar {
+        background: var(--red); }
+      .main .errorsDisplayBabyOverlay .strengthContainer .newStrength .bar {
+        background: var(--blue); }
+  .main .redLabelBabyOverlay {
+    display: flex;
+    align-items: center;
+    pointer-events: none; }
+    .main .redLabelBabyOverlay p {
+      font-size: 2.3vw;
+      color: var(--red);
+      opacity: 0; }
   .main .testBabyOverlay {
     background: lightblue;
     cursor: pointer; }
