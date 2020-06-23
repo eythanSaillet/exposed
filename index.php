@@ -7,6 +7,24 @@ include 'config/config.php';
 ?>
 <div class="main">
 	<div class="grid"></div>
+
+	<!-- Password response -->
+	<div class="babyOverlay passwordResponseBabyOverlay">
+		<div class="textContainer">
+			<p class="text">
+				Your password is like a big and nasty shit. We advise you to change it son of crs !
+			</p>
+		</div>
+		<div class="strengthContainer">
+			<div class="strength">
+				<p class="label">STRENGTH</p>
+				<div class="barContainer">
+					<div class="bar"></div>
+					<span class="number">35%</span>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <?php
 

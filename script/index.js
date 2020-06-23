@@ -1,5 +1,10 @@
 // Creating the grid
 
+// Scroll to top on reload
+window.onbeforeunload = function () {
+	window.scrollTo(0, 0)
+}
+
 grid = {
 	width: 19,
 	height: 20,
@@ -217,18 +222,7 @@ grid = {
 }
 grid.setup()
 
-// grid.setupBabyOverlay({ x: 2, y: 3, width: 2, height: 2, className: 'basicBabyOverlay' })
-
-// grid.displayLetterWithGlitch({ x: 1, y: 1, letter: 'J', minLength: 5, maxLength: 10 })
-
-// grid.displayLetter(0, 0, 'A')
-// grid.displayLetter(2, 3, 'B')
-// grid.displayLetter(5, 7, '%')
-
-// grid.displayWord({ x: 2, y: 1, word: 'EXPOSED', minLength: 5, maxLength: 30, delay: 100 })
-
-// grid.changeGridColor(5, 5, 2)
-// grid.changeGridColor(18, 19, 1)
+// NAVIGATION
 
 let navigation = {
 	input: '',
@@ -312,7 +306,7 @@ let navigation = {
 
 	// Display information after password search
 
-	displaySearch(input) {
+	displaySearch() {
 		this.isLoading = true
 
 		// Kill baby overlays
@@ -341,32 +335,36 @@ let navigation = {
 		grid.displayWord({ x: 2, y: 6, word: 'LOADING', minLength: 3, maxLength: 10, delay: 200 })
 		grid.setupLoadingAnimation(10, 6, 100)
 
+		// Display SRCH
+		grid.displayWord({ x: 2, y: 4, word: 'SRCH', minLength: 0, maxLength: 5, delay: 10, gridColor: 0, color: 0 })
+
 		// Analyze password
 		this.analyzePassword(this.input)
-
-		// gsap.to(grid.$cellsArray, {
-		// 	background: 'red',
-		// 	// stagger: {
-		// 	// 	each: 0.1,
-		// 	// 	from: 19 * 4 + 4,
-		// 	// 	grid: 'auto',
-		// 	// },
-		// 	stagger: {
-		// 		each: 0.1,
-		// 		from: 1,
-		// 		grid: 'auto',
-		// 		onComplete: (index) => {
-		// 			test(index)
-		// 		},
-		// 	},
-		// })
 	},
 
 	displaySearchInfos() {
+		this.actualY = 6
+
+		// Display loading done
 		grid.displayWord({ x: 10, y: 6, word: 'DONE', minLength: 3, maxLength: 10, delay: 200, color: 2 })
 		setTimeout(() => {
 			grid.setupScrollCallAnimation(15, 6, 600)
-		}, 1000)
+		}, 1100)
+
+		// Unlock scroll
+		document.querySelector('body').style.overflowY = 'visible'
+
+		this.actualY += 2
+
+		// Display password strength
+		//
+
+		this.actualY += 3
+
+		// Display number of errors
+		grid.displayWord({ x: 2, y: this.actualY, word: '5', minLength: 3, maxLength: 10, delay: 200 })
+		grid.displayWord({ x: 4, y: this.actualY, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
+		grid.displayWord({ x: 11, y: this.actualY, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
 	},
 
 	analyzePassword(input) {

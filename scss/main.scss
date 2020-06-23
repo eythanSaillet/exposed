@@ -4,6 +4,7 @@
 	--red: #ff4655;
 	--yellow: #fdfd96;
 	--green: #96ec88;
+	--blue: #5d81ff;
 }
 
 p {
@@ -15,8 +16,9 @@ body {
 	margin: 0;
 	color: white;
 	position: relative;
-	// height: 100vh;
-	overflow: hidden;
+	overflow-x: hidden;
+	// overflow-y: hidden;
+	font-family: 'Space Mono Regular';
 }
 
 .main {
@@ -66,7 +68,6 @@ body {
 					background: var(--backgroundColorLight);
 				}
 				p {
-					font-family: 'Space Mono Regular';
 					font-size: 3.7vw;
 					user-select: none;
 					pointer-events: none;
@@ -128,8 +129,64 @@ body {
 	.textBabyOverlay {
 		display: flex;
 		align-items: center;
-		font-family: 'Space Mono Regular';
 		font-size: 1vw;
+	}
+	.passwordResponseBabyOverlay {
+		left: calc(1px + 5.555vw * 2);
+		top: calc(1px + 5.555vw * 8 + 1px * 8);
+		width: calc(5.555vw * 14 - 1.5px);
+		height: calc(5.555vw * 2 + 1px * (2 - 1));
+		background: var(--backgroundColorLight);
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		.textContainer {
+			width: calc(60% - 5.55vw / 2);
+			height: 80%;
+			display: flex;
+			align-items: center;
+			.text {
+				margin: 0;
+				font-size: 1.7vw;
+			}
+		}
+		.strengthContainer {
+			width: calc(40% - 5.55vw / 2);
+			height: 80%;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			.strength {
+				width: 70%;
+				height: 70%;
+				.label {
+					font-size: 1.5vw;
+					margin-bottom: 3px;
+				}
+				.barContainer {
+					width: 100%;
+					height: 30%;
+					background: var(--backgroundColor);
+					position: relative;
+					.number {
+						position: absolute;
+						top: 50%;
+						left: 0;
+						font-size: 1.2vw;
+						margin-left: 5px;
+						transform: translateY(-50%);
+					}
+					.bar {
+						width: 35%;
+						height: 100%;
+						position: absolute;
+						top: 0;
+						left: 0;
+						background: var(--blue);
+					}
+				}
+			}
+		}
 	}
 	.testBabyOverlay {
 		background: lightblue;
