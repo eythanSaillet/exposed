@@ -357,14 +357,36 @@ let navigation = {
 		this.actualY += 2
 
 		// Display password strength
-		//
+		let displayPasswordStrength = () => {
+			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.2, { opacity: 1 })
+			gsap.to(document.querySelector('.passwordResponseBabyOverlay .bar'), 1, { width: `${this.analyzedPassword.strength}%` })
+			let number = { value: 0 }
+			let $number = document.querySelector('.passwordResponseBabyOverlay .number')
+			gsap.to(number, 1, {
+				value: this.analyzedPassword.strength,
+				onUpdate: () => {
+					$number.innerHTML = `${number.value.toFixed(1)}%`
+				},
+			})
+		}
+		scrollDidsplayer.add(8, displayPasswordStrength)
 
 		this.actualY += 3
 
 		// Display number of errors
-		grid.displayWord({ x: 2, y: this.actualY, word: '5', minLength: 3, maxLength: 10, delay: 200 })
-		grid.displayWord({ x: 4, y: this.actualY, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
-		grid.displayWord({ x: 11, y: this.actualY, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
+		let numberOfErrors = 0
+		!this.analyzedPassword.lowerCases ? numberOfErrors++ : null
+		!this.analyzedPassword.upperCases ? numberOfErrors++ : null
+		!this.analyzedPassword.correctLength ? numberOfErrors++ : null
+		!this.analyzedPassword.numbers ? numberOfErrors++ : null
+		!this.analyzedPassword.specialCharacters ? numberOfErrors++ : null
+
+		let displayNumberOfErrors = () => {
+			grid.displayWord({ x: 2, y: this.actualY, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
+			grid.displayWord({ x: 4, y: this.actualY, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
+			grid.displayWord({ x: 11, y: this.actualY, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
+		}
+		scrollDidsplayer.add(11, displayNumberOfErrors)
 	},
 
 	analyzePassword(input) {
@@ -382,7 +404,7 @@ let navigation = {
 		numbers === null ? (this.analyzedPassword.numbers = false) : (this.analyzedPassword.numbers = true)
 
 		// Calculate password strength
-		this.analyzedPassword.strength = new PasswordMeter().getResult('bonjour').percent
+		this.analyzedPassword.strength = new PasswordMeter().getResult(input).percent
 
 		// Compare to the database
 		let xmlhttp = new XMLHttpRequest()
@@ -402,7 +424,35 @@ let navigation = {
 }
 navigation.init()
 
-// grid.setupLoadingAnimation(0, 0, 100)
+grid.setupBabyOverlay({ x: 2, y: 15, width: 4, height: 1, className: 'testBabyOverlay' })
+
+let scrollDidsplayer = {
+	targets: [],
+
+	setup() {
+		window.addEventListener('scroll', () => {
+			// console.log(window.scrollY + window.innerHeight)
+
+			for (const _target of this.targets) {
+				// console.log(0.0555 * window.innerWidth, document.querySelector('.main .grid .row .cell').getBoundingClientRect().height)
+				// console.log(_target[0] * 0.0555 * window.innerWidth - 0.0555 * window.innerWidth + _target[0] * 2)
+				if (window.scrollY + window.innerHeight > _target[0] * 0.0555 * window.innerWidth - 0.0555 * window.innerWidth && !_target[2]) {
+					_target[2] = true
+					_target[1]()
+				}
+			}
+		})
+	},
+
+	add(y, call) {
+		this.targets.push([y, call, false])
+	},
+
+	reset() {
+		this.targets = []
+	},
+}
+scrollDidsplayer.setup()
 
 // Dynamic password search
 function showPasswords(index, search) {

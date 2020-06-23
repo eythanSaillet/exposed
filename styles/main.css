@@ -21,7 +21,6 @@ body {
   overflow: hidden;
   position: absolute; }
   .main .grid {
-    width: 105.55vw;
     overflow: hidden; }
     .main .grid .row {
       display: flex; }
@@ -37,9 +36,6 @@ body {
         width: 5.555vw;
         height: 5.555vw;
         background: #252530;
-        border-top: 1px solid var(--backgroundColor);
-        border-right: 1px solid var(--backgroundColor);
-        box-sizing: content-box;
         position: relative;
         display: flex;
         justify-content: center;
@@ -88,13 +84,14 @@ body {
     font-size: 1vw; }
   .main .passwordResponseBabyOverlay {
     left: calc(1px + 5.555vw * 2);
-    top: calc(1px + 5.555vw * 8 + 1px * 8);
+    top: calc(5.555vw * 8);
     width: calc(5.555vw * 14 - 1.5px);
-    height: calc(5.555vw * 2 + 1px * (2 - 1));
+    height: calc(5.555vw * 2 - 1px);
     background: var(--backgroundColorLight);
     display: flex;
     justify-content: center;
-    align-items: center; }
+    align-items: center;
+    opacity: 0; }
     .main .passwordResponseBabyOverlay .textContainer {
       width: calc(60% - 5.55vw / 2);
       height: 80%;
@@ -128,7 +125,7 @@ body {
             margin-left: 5px;
             transform: translateY(-50%); }
           .main .passwordResponseBabyOverlay .strengthContainer .strength .barContainer .bar {
-            width: 35%;
+            width: 0%;
             height: 100%;
             position: absolute;
             top: 0;

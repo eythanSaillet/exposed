@@ -20,7 +20,7 @@ include 'config/config.php';
 				<p class="label">STRENGTH</p>
 				<div class="barContainer">
 					<div class="bar"></div>
-					<span class="number">35%</span>
+					<span class="number">0%</span>
 				</div>
 			</div>
 		</div>
