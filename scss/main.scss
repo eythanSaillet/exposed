@@ -3,6 +3,7 @@
 	--backgroundColorLight: #2b2b36;
 	--red: #ff4655;
 	--yellow: #fdfd96;
+	--green: #96ec88;
 }
 
 p {
@@ -14,7 +15,7 @@ body {
 	margin: 0;
 	color: white;
 	position: relative;
-	height: 100vh;
+	// height: 100vh;
 	overflow: hidden;
 }
 
@@ -76,6 +77,9 @@ body {
 				p.yellow {
 					color: var(--yellow);
 				}
+				p.green {
+					color: var(--green);
+				}
 				&:first-child {
 					border-left: 1px solid var(--backgroundColor);
 				}
@@ -87,6 +91,9 @@ body {
 					top: calc(-0.5vw - 0.5px);
 					left: calc(-0.5vw - 0.5px);
 					background-size: 100% 100%;
+				}
+				img {
+					width: 50%;
 				}
 
 				// Menu

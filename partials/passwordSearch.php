@@ -4,10 +4,24 @@ include '../config/config.php';
 
 $search = $_GET['search'];
 
-$query = $pdo->query('SELECT password FROM combos WHERE password LIKE "%'.$search.'%"');
+// Contains
+// Count
+$containsCountQuery = $pdo->query('SELECT COUNT(password) FROM combos WHERE password LIKE "%'.$search.'%"');
+$containsCountData = $containsCountQuery->fetch();
+// First 100
+$containsQuery = $pdo->query('SELECT password FROM combos WHERE password LIKE "%'.$search.'%"');
+$containsData = $containsQuery->fetchAll();
 
-$data = $query->fetchAll();
+// Equal
+// Count
+$equalCountQuery = $pdo->query('SELECT COUNT(password) FROM combos WHERE password LIKE "'.$search.'"');
+$equalCountData = $equalCountQuery->fetch();
 
-$reponse = json_encode($data);
+$data = new stdClass();
+$data->containsCount = $containsCountData;
+$data->equalCount = $equalCountData;
+$data->containsPasswords = $containsData;
 
-echo $reponse;
+$response = json_encode($data);
+
+echo $response;

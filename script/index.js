@@ -5,7 +5,7 @@ grid = {
 	height: 20,
 
 	girdColorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
-	textColorsClass: ['red', 'yellow'],
+	textColorsClass: ['red', 'yellow', 'green'],
 
 	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§',
 
@@ -197,6 +197,23 @@ grid = {
 		}
 		loadingAnimationIteration()
 	},
+
+	setupScrollCallAnimation(x, y, delay) {
+		let cell = this.$cellsMatrix[y][x]
+		let img = document.createElement('img')
+		img.setAttribute('src', 'assets/triangleArrow.svg')
+		cell.appendChild(img)
+		let hidden = false
+		setInterval(() => {
+			if (hidden) {
+				img.style.opacity = 1
+				hidden = false
+			} else {
+				img.style.opacity = 0
+				hidden = true
+			}
+		}, delay)
+	},
 }
 grid.setup()
 
@@ -345,6 +362,13 @@ let navigation = {
 		// })
 	},
 
+	displaySearchInfos() {
+		grid.displayWord({ x: 10, y: 6, word: 'DONE', minLength: 3, maxLength: 10, delay: 200, color: 2 })
+		setTimeout(() => {
+			grid.setupScrollCallAnimation(15, 6, 600)
+		}, 1000)
+	},
+
 	analyzePassword(input) {
 		// Analyse password with regex
 		let upperCases = input.match(/[A-Z]/g)
@@ -353,20 +377,25 @@ let navigation = {
 		let numbers = input.match(/[0-9]/g)
 
 		// Define analyzedPassword with analyze result
-		input.length < 8 ? (this.correctLength = false) : (this.correctLength = true)
-		upperCases === null ? (this.upperCases = false) : (this.upperCases = true)
-		lowerCases === null ? (this.lowerCases = false) : (this.lowerCases = true)
-		specialCharacters === null ? (this.specialCharacters = false) : (this.specialCharacters = true)
-		numbers === null ? (this.numbers = false) : (this.numbers = true)
+		input.length < 8 ? (this.analyzedPassword.correctLength = false) : (this.analyzedPassword.correctLength = true)
+		upperCases === null ? (this.analyzedPassword.upperCases = false) : (this.analyzedPassword.upperCases = true)
+		lowerCases === null ? (this.analyzedPassword.lowerCases = false) : (this.analyzedPassword.lowerCases = true)
+		specialCharacters === null ? (this.analyzedPassword.specialCharacters = false) : (this.analyzedPassword.specialCharacters = true)
+		numbers === null ? (this.analyzedPassword.numbers = false) : (this.analyzedPassword.numbers = true)
+
+		// Calculate password strength
+		this.analyzedPassword.strength = new PasswordMeter().getResult('bonjour').percent
 
 		// Compare to the database
 		let xmlhttp = new XMLHttpRequest()
 		xmlhttp.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				// Get response here
-				console.log(this.response)
-				this.databaseResponse = this.response
-				// DISPLAY SEARCH INFOS
+				this.databaseResponse = JSON.parse(this.response)
+				navigation.analyzedPassword.databaseResponse = this.databaseResponse
+				console.log(navigation.analyzedPassword)
+
+				// Display search infos
+				navigation.displaySearchInfos()
 			}
 		}
 		xmlhttp.open('GET', `partials/passwordSearch.php?search=${input}`, true)
