@@ -17,8 +17,6 @@ body {
   margin: 0;
   color: white;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: hidden;
   font-family: 'Space Mono Regular'; }
 
 .main {
@@ -242,6 +240,35 @@ body {
       background: var(--darkPink); }
       .main .bruteForceTimeBabyOverlay .newPassword .barContainer .bar {
         background: var(--pink); }
+  .main .dbInfo {
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .main .dbInfo p {
+      font-size: 1.7vw;
+      width: 70%;
+      padding: 3% 10% 3% 10%;
+      background: var(--backgroundColor); }
+  .main .occurencesInfo {
+    background: var(--backgroundColorLight); }
+    .main .occurencesInfo div {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center; }
+      .main .occurencesInfo div p {
+        font-size: 1.5vw;
+        width: 85%; }
+  .main .labelBabyOverlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none; }
+    .main .labelBabyOverlay p {
+      font-size: 2.3vw;
+      opacity: 1; }
   .main .redLabelBabyOverlay {
     display: flex;
     align-items: center;
@@ -249,6 +276,14 @@ body {
     .main .redLabelBabyOverlay p {
       font-size: 2.3vw;
       color: var(--red);
+      opacity: 0; }
+  .main .yellowLabelBabyOverlay {
+    display: flex;
+    align-items: center;
+    pointer-events: none; }
+    .main .yellowLabelBabyOverlay p {
+      font-size: 2.3vw;
+      color: var(--yellow);
       opacity: 0; }
   .main .testBabyOverlay {
     background: lightblue;

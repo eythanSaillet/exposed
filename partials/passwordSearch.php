@@ -9,7 +9,7 @@ $search = $_GET['search'];
 $containsCountQuery = $pdo->query('SELECT COUNT(password) FROM combos WHERE password LIKE "%'.$search.'%"');
 $containsCountData = $containsCountQuery->fetch();
 // First 100
-$containsQuery = $pdo->query('SELECT password FROM combos WHERE password LIKE "%'.$search.'%"');
+$containsQuery = $pdo->query('SELECT DISTINCT password FROM combos WHERE password LIKE "%'.$search.'%" and password NOT LIKE "'.$search.'" LIMIT 50');
 $containsData = $containsQuery->fetchAll();
 
 // Equal

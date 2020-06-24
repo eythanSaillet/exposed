@@ -7,7 +7,7 @@ window.onbeforeunload = function () {
 
 grid = {
 	width: 19,
-	height: 60,
+	height: 100,
 
 	girdColorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
 	textColorsClass: ['red', 'yellow', 'green', 'pink'],
@@ -159,9 +159,9 @@ grid = {
 		}
 
 		// Set position and size
-		div.style.left = `calc(1px + 5.555vw * ${x})`
+		div.style.left = `calc(1px + 5.555vw * ${x} + 1px * ${x})`
 		div.style.top = `calc(1px + 5.555vw * ${y} + 1px * ${y})`
-		div.style.width = `calc(5.555vw * ${width} - 1.5px)`
+		div.style.width = `calc(5.555vw * ${width} + 1px * ${x} * 2)`
 		div.style.height = `calc(5.555vw * ${height} + 1px * ${height - 1})`
 
 		// Set mouse events
@@ -226,7 +226,7 @@ grid.setup()
 
 let navigation = {
 	input: '',
-	possibleInput: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§\'"`,:;.{}=',
+	possibleInput: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§'`,:;.{}=ÙÉÈÀ",
 	actualY: 0,
 	isLoading: false,
 	searchErrorsData: {
@@ -430,11 +430,11 @@ let navigation = {
 			errors.push('specialCharacters')
 		}
 
-		let y = this.actualY
+		let y1 = this.actualY
 		let displayNumberOfErrors = () => {
-			grid.displayWord({ x: 2, y: y, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
-			grid.displayWord({ x: 4, y: y, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
-			grid.displayWord({ x: 11, y: y, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
+			grid.displayWord({ x: 2, y: y1, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
+			grid.displayWord({ x: 4, y: y1, word: 'ERRORS', minLength: 3, maxLength: 10, delay: 200, color: 0 })
+			grid.displayWord({ x: 11, y: y1, word: 'FOUND', minLength: 3, maxLength: 10, delay: 200 })
 		}
 		scrollDidsplayer.add(11, displayNumberOfErrors)
 
@@ -496,16 +496,19 @@ let navigation = {
 			scrollDidsplayer.add(this.actualY, displayErrorDiv)
 		}
 
+		this.actualY += 1
+
 		// Display brute force title
 
+		let y2 = this.actualY
 		let displayBruteForceTitle = () => {
-			console.log('display')
-			grid.displayWord({ x: 3, y: this.actualY - 2, word: 'BRUTE', minLength: 3, maxLength: 10, delay: 200, color: 3 })
-			grid.displayWord({ x: 10, y: this.actualY - 2, word: 'FORCE', minLength: 3, maxLength: 10, delay: 200 })
+			console.log(y2)
+			grid.displayWord({ x: 3, y: y2, word: 'BRUTE', minLength: 3, maxLength: 10, delay: 200, color: 3 })
+			grid.displayWord({ x: 10, y: y2, word: 'FORCE', minLength: 3, maxLength: 10, delay: 200 })
 		}
 		scrollDidsplayer.add(this.actualY, displayBruteForceTitle)
 
-		this.actualY += 3
+		this.actualY += 2
 
 		// Clear the grid behind
 		for (let x = 0; x < 14; x++) {
@@ -562,6 +565,72 @@ let navigation = {
 			gsap.to(bruteForceTimeBabyOverlay, 0.4, { opacity: 1 })
 		}
 		scrollDidsplayer.add(this.actualY, displayBruteForceTimeBabyOverlay)
+
+		this.actualY += 7
+
+		for (let i = 0; i < grid.width; i++) {
+			grid.changeGridColor(i, this.actualY, 2)
+		}
+
+		this.actualY += 2
+
+		// Display 10 million infos
+		grid.displayWord({ x: 4, y: this.actualY, word: '10', minLength: 3, maxLength: 10, delay: 200 })
+		grid.displayWord({ x: 7, y: this.actualY, word: 'MILLION', minLength: 3, maxLength: 10, delay: 200, color: 1 })
+
+		this.actualY += 1
+
+		let dbTextInfo = document.querySelector('p')
+		dbTextInfo.innerHTML = 'The following data is extracted from a 10 <span style="color: var(--yellow)">million</span> passwords database. This data was shared for research purpose.'
+		grid.setupBabyOverlay({ x: 4, y: this.actualY, width: 10, height: 3, className: 'dbInfo', content: dbTextInfo })
+
+		this.actualY += 4
+
+		// Display occurences
+		let y3 = this.actualY
+
+		let exactOccurences = document.createElement('p')
+		exactOccurences.innerHTML = 'EXACT OCCURENCES'
+		grid.setupBabyOverlay({ x: 2, y: y3, width: 6, height: 1, className: 'redLabelBabyOverlay', content: exactOccurences })
+
+		let partialOccurences = document.createElement('p')
+		partialOccurences.innerHTML = 'PARTIAL OCCURENCES'
+		grid.setupBabyOverlay({ x: 2, y: y3 + 2, width: 6, height: 1, className: 'yellowLabelBabyOverlay', content: partialOccurences })
+
+		let occurencesInfo = document.createElement('p')
+		occurencesInfo.innerHTML = 'These are the number of passwords that are <span style="color: var(--red);">the same</span> as yours and the number of passwords that have <span style="color: var(--yellow);">your keyword</span> in it.'
+		let listInfo = document.createElement('p')
+		listInfo.innerHTML = 'Check the list, we always find something funny :)'
+
+		let occurencesDiv = document.createElement('div')
+		occurencesDiv.appendChild(occurencesInfo)
+		occurencesDiv.appendChild(listInfo)
+
+		grid.setupBabyOverlay({ x: 10, y: y3, width: 6, height: 4, className: 'occurencesInfo', content: occurencesDiv })
+
+		function displayOccurences() {
+			console.log(navigation.analyzedPassword.databaseResponse.equalCount, navigation.analyzedPassword.databaseResponse.containsCount)
+			gsap.to(exactOccurences, 0.4, { opacity: 1 })
+			grid.displayWord({ x: 2, y: y3 + 1, word: navigation.analyzedPassword.databaseResponse.equalCount['COUNT(password)'], minLength: 3, maxLength: 10, delay: 200 })
+
+			grid.displayWord({ x: 2, y: y3 + 3, word: navigation.analyzedPassword.databaseResponse.containsCount['COUNT(password)'], minLength: 3, maxLength: 10, delay: 200 })
+			gsap.to(partialOccurences, 0.4, { opacity: 1 })
+		}
+		scrollDidsplayer.add(y3, displayOccurences)
+
+		this.actualY += 5
+
+		let passwordIndex = 0
+		console.log(this.analyzedPassword.databaseResponse.containsPasswords)
+		for (const _password of this.analyzedPassword.databaseResponse.containsPasswords) {
+			console.log(_password.password)
+
+			let p = document.createElement('p')
+			p.innerHTML = _password.password
+			grid.setupBabyOverlay({ x: passwordIndex % 3 === 1 ? 12 : passwordIndex % 3 === 2 ? 7 : 2, y: this.actualY + Math.floor(passwordIndex / 3), width: 4, height: 1, className: 'labelBabyOverlay', content: p })
+			passwordIndex++
+		}
+		console.log(Math.floor(passwordIndex / 3))
 	},
 
 	analyzePassword(input) {
@@ -666,6 +735,8 @@ let navigation = {
 			if (this.readyState == 4 && this.status == 200) {
 				this.databaseResponse = JSON.parse(this.response)
 				navigation.analyzedPassword.databaseResponse = this.databaseResponse
+
+				console.log(navigation.analyzedPassword)
 
 				// Display search infos
 				navigation.displaySearchInfos()

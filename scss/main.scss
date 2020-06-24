@@ -19,8 +19,8 @@ body {
 	margin: 0;
 	color: white;
 	position: relative;
-	overflow-x: hidden;
-	overflow-y: hidden;
+	// overflow-x: hidden;
+	// overflow-y: hidden;
 	font-family: 'Space Mono Regular';
 }
 
@@ -333,6 +333,44 @@ body {
 			}
 		}
 	}
+	.dbInfo {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		p {
+			font-size: 1.7vw;
+			width: 70%;
+			padding: 3% 10% 3% 10%;
+			background: var(--backgroundColor);
+		}
+	}
+	.occurencesInfo {
+		background: var(--backgroundColorLight);
+		div {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-around;
+			align-items: center;
+			p {
+				font-size: 1.5vw;
+				width: 85%;
+				// padding: 3% 10% 3% 10%;
+				// background: var(--backgroundColor);
+			}
+		}
+	}
+	.labelBabyOverlay {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		pointer-events: none;
+		p {
+			font-size: 2.3vw;
+			opacity: 1;
+		}
+	}
 	.redLabelBabyOverlay {
 		display: flex;
 		align-items: center;
@@ -340,6 +378,16 @@ body {
 		p {
 			font-size: 2.3vw;
 			color: var(--red);
+			opacity: 0;
+		}
+	}
+	.yellowLabelBabyOverlay {
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+		p {
+			font-size: 2.3vw;
+			color: var(--yellow);
 			opacity: 0;
 		}
 	}
