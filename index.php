@@ -49,6 +49,217 @@ include 'config/config.php';
 			</div>
 		</div>
 	</div>
+	<!-- Time to force brute crack -->
+	<div class="babyOverlay bruteForceTimeBabyOverlay">
+		<div class="oldPassword">
+			<div class="infos">
+				<div class="passwordInfos">
+					<div class="label">PASSWORD</div>
+					<div class="password">ChaT36</div>
+				</div>
+				<div class="timeInfos">
+					<div class="label">TIME</div>
+					<div class="time">1’12”</div>
+				</div>
+			</div>
+			<div class="bars">
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+			</div>
+		</div>
+		<div class="newPassword">
+			<div class="infos">
+				<div class="passwordInfos">
+					<div class="label">PASSWORD</div>
+					<div class="password">cH_aTg1#6</div>
+				</div>
+				<div class="timeInfos">
+					<div class="label">TIME</div>
+					<div class="time">4Y 12M 10D 5H</div>
+				</div>
+			</div>
+			<div class="bars">
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+				<div class="barContainer">
+					<div class="bar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 <?php
 

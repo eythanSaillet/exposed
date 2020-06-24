@@ -458,7 +458,7 @@ let navigation = {
 					new: $errorDiv.querySelector('.newStrength .number'),
 				}
 				gsap.to(strengths, 1, {
-					old: 10,
+					old: this.analyzedPassword.strength,
 					onUpdate: () => {
 						$numbers.old.innerHTML = `${Math.round(strengths.old)}%`
 					},
@@ -472,6 +472,66 @@ let navigation = {
 			}
 			scrollDidsplayer.add(this.actualY, displayErrorDiv)
 		}
+
+		this.actualY += 1
+
+		// Display brute force time
+
+		// Clear the grid behind
+		for (let x = 0; x < 14; x++) {
+			for (let y = 0; y < 5; y++) {
+				grid.changeGridColor(x + 2, y + this.actualY, 3)
+			}
+		}
+
+		// Position the overlay
+		let bruteForceTimeBabyOverlay = document.querySelector('.bruteForceTimeBabyOverlay')
+		bruteForceTimeBabyOverlay.style.top = `calc(1px + 5.555vw * ${this.actualY} + 1px * ${this.actualY})`
+		// Display information
+		document.querySelector('.bruteForceTimeBabyOverlay .oldPassword .password').innerHTML = this.analyzedPassword.password
+		document.querySelector('.bruteForceTimeBabyOverlay .newPassword .password').innerHTML = this.analyzedPassword.correction.newPassword
+		document.querySelector('.bruteForceTimeBabyOverlay .oldPassword .time').innerHTML = this.analyzedPassword.bruteForceTime > 1 ? this.analyzedPassword.bruteForceTime.toString().toParsedTime() : 'INSTANTLY'
+		document.querySelector('.bruteForceTimeBabyOverlay .newPassword .time').innerHTML = this.analyzedPassword.correction.bruteForceTime.toString().toParsedTime()
+		// Select bars for stagger animation
+		let oldPasswordBars = document.querySelectorAll('.bruteForceTimeBabyOverlay .oldPassword .bar')
+		let newPasswordsBars = document.querySelectorAll('.bruteForceTimeBabyOverlay .newPassword .bar')
+
+		let displayBruteForceTimeBabyOverlay = () => {
+			// Trigger staggers
+			gsap.fromTo(
+				oldPasswordBars,
+				{
+					scaleY: 0,
+				},
+				{
+					duration: (this.analyzedPassword.bruteForceTime < 0.1 ? 0.1 : this.analyzedPassword.bruteForceTime) / 30,
+					scaleY: 1,
+					repeat: -1,
+					ease: Linear.easeNone,
+					stagger: {
+						each: (this.analyzedPassword.bruteForceTime < 0.1 ? 0.1 : this.analyzedPassword.bruteForceTime) / 30,
+					},
+				}
+			)
+			gsap.fromTo(
+				newPasswordsBars,
+				{
+					scaleY: 0,
+				},
+				{
+					duration: this.analyzedPassword.correction.bruteForceTime / 30,
+					scaleY: 1,
+					repeat: -1,
+					ease: Linear.easeNone,
+					stagger: {
+						each: this.analyzedPassword.correction.bruteForceTime / 30,
+					},
+				}
+			)
+			// Display the overlay
+			gsap.to(bruteForceTimeBabyOverlay, 0.4, { opacity: 1 })
+		}
+		scrollDidsplayer.add(this.actualY, displayBruteForceTimeBabyOverlay)
 	},
 
 	analyzePassword(input) {
@@ -564,6 +624,11 @@ let navigation = {
 			this.analyzedPassword.correction.specialCharacters.password = newPassword
 			this.analyzedPassword.correction.specialCharacters.strength = new PasswordMeter().getResult(newPassword).percent
 		}
+		this.analyzedPassword.correction.newPassword = newPassword
+
+		// Calculate brute force time to crack
+		this.analyzedPassword.bruteForceTime = calculateBruteforceTime(input)
+		this.analyzedPassword.correction.bruteForceTime = calculateBruteforceTime(newPassword)
 
 		// Compare to the database
 		let xmlhttp = new XMLHttpRequest()
@@ -606,6 +671,42 @@ let scrollDidsplayer = {
 	},
 }
 scrollDidsplayer.setup()
+
+// Time converter function
+
+String.prototype.toParsedTime = function () {
+	let sec_num = parseInt(this, 10) // don't forget the second param
+	let hours = Math.floor(sec_num / 3600)
+	let minutes = Math.floor((sec_num - hours * 3600) / 60)
+	let seconds = sec_num - hours * 3600 - minutes * 60
+
+	if (hours < 10) {
+		hours = '0' + hours
+	}
+	if (minutes < 10) {
+		minutes = '0' + minutes
+	}
+	if (seconds < 10) {
+		seconds = '0' + seconds
+	}
+
+	if (parseInt(hours) === 0 && parseInt(minutes) === 0) {
+		return seconds + '"'
+	}
+	if (parseInt(hours) === 0) {
+		return minutes + "'" + seconds + '"'
+	}
+	if (parseInt(hours) < 24) {
+		return hours + 'H ' + minutes + "'" + seconds + '"'
+	}
+	let day = Math.floor(hours / 24)
+	if (day < 365) {
+		return day + 'D ' + (hours % 24) + 'H ' + minutes + "'" + seconds + '"'
+	}
+	if (day > 365) {
+		return Math.floor(day / 365) + 'Y ' + (day % 365) + 'D ' + (hours % 24) + 'H ' + minutes + "'" + seconds + '"'
+	}
+}
 
 // Dynamic password search
 function showPasswords(index, search) {
