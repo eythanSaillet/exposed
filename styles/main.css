@@ -18,6 +18,7 @@ body {
   color: white;
   position: relative;
   overflow-x: hidden;
+  overflow-y: hidden;
   font-family: 'Space Mono Regular'; }
 
 .main {
@@ -44,19 +45,21 @@ body {
         position: relative;
         display: flex;
         justify-content: center;
-        align-items: center; }
+        align-items: center;
+        pointer-events: none;
+        user-select: none; }
         .main .grid .row .cell:hover {
           background: var(--backgroundColorLight); }
         .main .grid .row .cell p {
-          font-size: 3.7vw;
-          user-select: none;
-          pointer-events: none; }
+          font-size: 3.7vw; }
         .main .grid .row .cell p.red {
           color: var(--red); }
         .main .grid .row .cell p.yellow {
           color: var(--yellow); }
         .main .grid .row .cell p.green {
           color: var(--green); }
+        .main .grid .row .cell p.pink {
+          color: var(--pink); }
         .main .grid .row .cell:first-child {
           border-left: 1px solid var(--backgroundColor); }
         .main .grid .row .cell:before {
@@ -99,7 +102,7 @@ body {
       align-items: center; }
       .main .searchInfoBabyOverlay .textContainer .text {
         margin: 0;
-        font-size: 1.7vw; }
+        font-size: 1.6vw; }
   .main .passwordResponseBabyOverlay {
     width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
     height: calc(5.555vw * 2 + 1px * (2 - 1));
@@ -116,7 +119,7 @@ body {
         width: 70%;
         height: 70%; }
         .main .passwordResponseBabyOverlay .strengthContainer .strength .label {
-          font-size: 1.5vw;
+          font-size: 1.6vw;
           margin-bottom: 3px; }
         .main .passwordResponseBabyOverlay .strengthContainer .strength .barContainer {
           width: 100%;
@@ -145,7 +148,7 @@ body {
     display: none;
     opacity: 0; }
     .main .errorsDisplayBabyOverlay .textContainer .text {
-      font-size: 1.3vw; }
+      font-size: 1.7vw; }
     .main .errorsDisplayBabyOverlay .strengthContainer {
       width: calc(40% - 5.55vw / 2);
       height: 80%;

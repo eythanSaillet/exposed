@@ -7,10 +7,10 @@ window.onbeforeunload = function () {
 
 grid = {
 	width: 19,
-	height: 40,
+	height: 60,
 
 	girdColorsClass: ['basicCross', 'redCross', 'yellowCross', 'noCross'],
-	textColorsClass: ['red', 'yellow', 'green'],
+	textColorsClass: ['red', 'yellow', 'green', 'pink'],
 
 	glitchCharacters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§',
 
@@ -230,12 +230,18 @@ let navigation = {
 	actualY: 0,
 	isLoading: false,
 	searchErrorsData: {
-		lowerCases: ['NO LOWERCASE', ''],
-		upperCases: ['NO UPPERCASE', ''],
-		length: ['PASSWORD TOO SHORT', ''],
-		numbers: ['NO NUMBERS', ''],
-		specialCharacters: ['NO SPECIAL CHARACTER', ''],
+		lowerCases: ['NO LOWERCASE', 'Varying between upper and lower case increases the strength of your password significantly.'],
+		upperCases: ['NO UPPERCASE', 'Varying between upper and lower case increases the strength of your password significantly.'],
+		length: ['PASSWORD TOO SHORT', 'Your password is too short. Try making it longer by adding some characters !'],
+		numbers: ['NO NUMBERS', "Your password doesn't contain any number ... Maybe try and add some !"],
+		specialCharacters: ['NO SPECIAL CHARACTER', 'By using special characters, you increase the strength of your password !'],
 	},
+	passwordStrengthsSentences: [
+		"Your password is not safe enough ! You should change it as soon as possible. Let's see what you could change to improve it.",
+		'Careful ! Your password could be a lot safer if you added some more characters ... Check out the advices we have for you !',
+		'Nice one, but it could be a little safer. Check out the advices we have for you !',
+		'Beautiful ! Your data should be safe with this password. Carry on keeping your data safe :3',
+	],
 
 	analyzedPassword: {},
 
@@ -286,7 +292,7 @@ let navigation = {
 		})
 
 		// Create "Enter the password" text
-		let p = (document.createElement('p').innerHTML = 'Enter the password')
+		let p = (document.createElement('p').innerHTML = 'Type the password')
 		grid.setupBabyOverlay({ x: 2, y: 2, width: 4, height: 1, className: 'textBabyOverlay', content: p })
 
 		// Create mouse events function
@@ -324,19 +330,32 @@ let navigation = {
 		// Display input
 		grid.displayWord({ x: 2, y: 3, word: this.input, minLength: 3, maxLength: 10, delay: 200 })
 
-		// Display grid
-		// A REFAIRE PTN AVEC DU STAGGER
+		// Clear cells backgrounds
 		for (let i = 0; i < grid.width; i++) {
 			for (let j = 0; j < grid.height; j++) {
-				grid.changeGridColor(i, j, 0)
 				grid.$cellsMatrix[j][i].classList.remove('lightBackCell')
 			}
 		}
+		// Display the grid
+		gsap.to(grid.$cellsArray, {
+			stagger: {
+				grid: 'auto',
+				from: 'random',
+				each: 0.05,
+
+				onComplete: function () {
+					if (this.targets()[0].classList.contains('noCross')) {
+						this.targets()[0].classList.remove('noCross')
+						this.targets()[0].classList.add('basicCross')
+					}
+				},
+			},
+		})
 		// Display title
-		grid.displayWord({ x: 2, y: 1, word: 'SEARCH', minLength: 3, maxLength: 10, delay: 200, gridColor: 2 })
+		grid.displayWord({ x: 2, y: 1, word: 'EXPOSED', minLength: 3, maxLength: 10, delay: 200, gridColor: 2 })
 
 		// Display menu
-		grid.createMenu(15, 1)
+		// grid.createMenu(15, 1)
 
 		// Display loader
 		grid.displayWord({ x: 2, y: 6, word: 'LOADING', minLength: 3, maxLength: 10, delay: 200 })
@@ -367,6 +386,9 @@ let navigation = {
 		let label = document.createElement('p')
 		label.innerHTML = 'PASSWORD TOO EASY'
 		grid.setupBabyOverlay({ x: 2, y: this.actualY - 1, width: 6, height: 1, className: 'redLabelBabyOverlay', content: label })
+		let sentenceIndex
+		this.analyzedPassword.strength > 25 ? (this.analyzedPassword.strength > 50 ? (this.analyzedPassword.strength > 75 ? (sentenceIndex = 3) : (sentenceIndex = 2)) : (sentenceIndex = 1)) : (sentenceIndex = 0)
+		document.querySelector('.passwordResponseBabyOverlay .text').innerHTML = this.passwordStrengthsSentences[sentenceIndex]
 		let displayPasswordStrength = () => {
 			gsap.to(label, 0.4, { opacity: 1 })
 			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.4, { opacity: 1 })
@@ -382,7 +404,7 @@ let navigation = {
 		}
 		scrollDidsplayer.add(8, displayPasswordStrength)
 
-		this.actualY += 3
+		this.actualY += 4
 
 		// Display number of errors
 		let numberOfErrors = 0
@@ -435,6 +457,7 @@ let navigation = {
 			// Set properties
 			$errorDiv.querySelector('.oldPassword').innerHTML = this.analyzedPassword.password
 			$errorDiv.querySelector('.newPassword').innerHTML = this.analyzedPassword.correction[_error].password
+			$errorDiv.querySelector('.text').innerHTML = this.searchErrorsData[_error][1]
 
 			// Display and append
 			$errorDiv.style.display = 'flex'
@@ -473,9 +496,16 @@ let navigation = {
 			scrollDidsplayer.add(this.actualY, displayErrorDiv)
 		}
 
-		this.actualY += 1
+		// Display brute force title
 
-		// Display brute force time
+		let displayBruteForceTitle = () => {
+			console.log('display')
+			grid.displayWord({ x: 3, y: this.actualY - 2, word: 'BRUTE', minLength: 3, maxLength: 10, delay: 200, color: 3 })
+			grid.displayWord({ x: 10, y: this.actualY - 2, word: 'FORCE', minLength: 3, maxLength: 10, delay: 200 })
+		}
+		scrollDidsplayer.add(this.actualY, displayBruteForceTitle)
+
+		this.actualY += 3
 
 		// Clear the grid behind
 		for (let x = 0; x < 14; x++) {
@@ -636,7 +666,6 @@ let navigation = {
 			if (this.readyState == 4 && this.status == 200) {
 				this.databaseResponse = JSON.parse(this.response)
 				navigation.analyzedPassword.databaseResponse = this.databaseResponse
-				console.log(navigation.analyzedPassword)
 
 				// Display search infos
 				navigation.displaySearchInfos()

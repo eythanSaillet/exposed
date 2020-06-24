@@ -20,7 +20,7 @@ body {
 	color: white;
 	position: relative;
 	overflow-x: hidden;
-	// overflow-y: hidden;
+	overflow-y: hidden;
 	font-family: 'Space Mono Regular';
 }
 
@@ -65,13 +65,13 @@ body {
 				display: flex;
 				justify-content: center;
 				align-items: center;
+				pointer-events: none;
+				user-select: none;
 				&:hover {
 					background: var(--backgroundColorLight);
 				}
 				p {
 					font-size: 3.7vw;
-					user-select: none;
-					pointer-events: none;
 				}
 				p.red {
 					color: var(--red);
@@ -81,6 +81,9 @@ body {
 				}
 				p.green {
 					color: var(--green);
+				}
+				p.pink {
+					color: var(--pink);
 				}
 				&:first-child {
 					border-left: 1px solid var(--backgroundColor);
@@ -144,7 +147,7 @@ body {
 			align-items: center;
 			.text {
 				margin: 0;
-				font-size: 1.7vw;
+				font-size: 1.6vw;
 			}
 		}
 	}
@@ -164,7 +167,7 @@ body {
 				width: 70%;
 				height: 70%;
 				.label {
-					font-size: 1.5vw;
+					font-size: 1.6vw;
 					margin-bottom: 3px;
 				}
 				.barContainer {
@@ -201,7 +204,7 @@ body {
 		opacity: 0;
 		.textContainer {
 			.text {
-				font-size: 1.3vw;
+				font-size: 1.7vw;
 			}
 		}
 		.strengthContainer {

@@ -29,7 +29,6 @@ include 'config/config.php';
 	<div class="babyOverlay searchInfoBabyOverlay errorsDisplayBabyOverlay">
 		<div class="textContainer">
 			<p class="text">
-				Look what append when we fix the error :) A amazing new password appeared ! nananan il est super bo trop stylé olala je meurs trop rhalou
 			</p>
 		</div>
 		<div class="strengthContainer">
