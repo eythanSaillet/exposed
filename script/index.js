@@ -159,10 +159,12 @@ grid = {
 		}
 
 		// Set position and size
-		div.style.left = `calc(1px + 5.555vw * ${x} + 1px * ${x})`
-		div.style.top = `calc(1px + 5.555vw * ${y} + 1px * ${y})`
-		div.style.width = `calc(5.555vw * ${width} + 1px * ${x} * 2)`
-		div.style.height = `calc(5.555vw * ${height} + 1px * ${height - 1})`
+		// div.style.left = `calc((5.555vw + 1px) * ${x} - 1px)`
+		div.style.left = `calc(5.555vw * ${x} + 1px)`
+		div.style.top = `calc((5.555vw) * ${y} + 1px)`
+		// div.style.width = `calc((5.555vw) * ${width})`
+		div.style.width = `calc((5.555vw) * ${width} - 2px)`
+		div.style.height = `calc((5.555vw) * ${height} - 2px)`
 
 		// Set mouse events
 		if (mouseEnterCall != undefined) {
@@ -452,7 +454,8 @@ let navigation = {
 
 			// Set position
 			$errorDiv.style.left = `calc(1px + 5.555vw * ${2})`
-			$errorDiv.style.top = `calc(1px + 5.555vw * ${this.actualY + 1} + 1px * ${this.actualY + 1})`
+			$errorDiv.style.top = `calc(5.555vw * ${this.actualY + 1} + 1px)`
+			// $errorDiv.style.top = `500px`
 
 			// Set properties
 			$errorDiv.querySelector('.oldPassword').innerHTML = this.analyzedPassword.password
@@ -502,7 +505,6 @@ let navigation = {
 
 		let y2 = this.actualY
 		let displayBruteForceTitle = () => {
-			console.log(y2)
 			grid.displayWord({ x: 3, y: y2, word: 'BRUTE', minLength: 3, maxLength: 10, delay: 200, color: 3 })
 			grid.displayWord({ x: 10, y: y2, word: 'FORCE', minLength: 3, maxLength: 10, delay: 200 })
 		}
@@ -519,7 +521,7 @@ let navigation = {
 
 		// Position the overlay
 		let bruteForceTimeBabyOverlay = document.querySelector('.bruteForceTimeBabyOverlay')
-		bruteForceTimeBabyOverlay.style.top = `calc(1px + 5.555vw * ${this.actualY} + 1px * ${this.actualY})`
+		bruteForceTimeBabyOverlay.style.top = `calc((5.555vw) * ${this.actualY} + 1px)`
 		// Display information
 		document.querySelector('.bruteForceTimeBabyOverlay .oldPassword .password').innerHTML = this.analyzedPassword.password
 		document.querySelector('.bruteForceTimeBabyOverlay .newPassword .password').innerHTML = this.analyzedPassword.correction.newPassword
@@ -609,7 +611,6 @@ let navigation = {
 		grid.setupBabyOverlay({ x: 10, y: y3, width: 6, height: 4, className: 'occurencesInfo', content: occurencesDiv })
 
 		function displayOccurences() {
-			console.log(navigation.analyzedPassword.databaseResponse.equalCount, navigation.analyzedPassword.databaseResponse.containsCount)
 			gsap.to(exactOccurences, 0.4, { opacity: 1 })
 			grid.displayWord({ x: 2, y: y3 + 1, word: navigation.analyzedPassword.databaseResponse.equalCount['COUNT(password)'], minLength: 3, maxLength: 10, delay: 200 })
 
@@ -621,16 +622,19 @@ let navigation = {
 		this.actualY += 5
 
 		let passwordIndex = 0
-		console.log(this.analyzedPassword.databaseResponse.containsPasswords)
 		for (const _password of this.analyzedPassword.databaseResponse.containsPasswords) {
-			console.log(_password.password)
-
 			let p = document.createElement('p')
 			p.innerHTML = _password.password
 			grid.setupBabyOverlay({ x: passwordIndex % 3 === 1 ? 12 : passwordIndex % 3 === 2 ? 7 : 2, y: this.actualY + Math.floor(passwordIndex / 3), width: 4, height: 1, className: 'labelBabyOverlay', content: p })
 			passwordIndex++
 		}
-		console.log(Math.floor(passwordIndex / 3))
+
+		this.actualY += Math.floor(passwordIndex / 3) + 2
+
+		// Calculate page height and resize it
+		let pageHeight = 0.05555 * this.actualY * window.innerWidth + this.actualY
+		grid.$grid.style.height = `${pageHeight}px`
+		// grid.$grid.style.overflowY = 'hidden'
 	},
 
 	analyzePassword(input) {
@@ -735,8 +739,6 @@ let navigation = {
 			if (this.readyState == 4 && this.status == 200) {
 				this.databaseResponse = JSON.parse(this.response)
 				navigation.analyzedPassword.databaseResponse = this.databaseResponse
-
-				console.log(navigation.analyzedPassword)
 
 				// Display search infos
 				navigation.displaySearchInfos()

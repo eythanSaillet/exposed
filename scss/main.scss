@@ -19,8 +19,8 @@ body {
 	margin: 0;
 	color: white;
 	position: relative;
-	// overflow-x: hidden;
-	// overflow-y: hidden;
+	overflow-x: hidden;
+	overflow-y: hidden;
 	font-family: 'Space Mono Regular';
 }
 
@@ -56,8 +56,8 @@ body {
 
 			// Cells
 			.cell {
-				width: 5.555vw;
-				height: 5.555vw;
+				width: calc(5.555vw - 1px);
+				height: calc(5.555vw - 1px);
 				background: #252530;
 				border-top: 1px solid var(--backgroundColor);
 				border-right: 1px solid var(--backgroundColor);
@@ -141,7 +141,7 @@ body {
 		justify-content: center;
 		align-items: center;
 		.textContainer {
-			width: calc(60% - 5.55vw / 2);
+			width: 57%;
 			height: 80%;
 			display: flex;
 			align-items: center;
@@ -152,10 +152,10 @@ body {
 		}
 	}
 	.passwordResponseBabyOverlay {
-		width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
-		height: calc(5.555vw * 2 + 1px * (2 - 1));
-		left: calc(1px * 2 + 5.555vw * 2 + 2px);
-		top: calc(1px + 5.555vw * 9 + 1px * 9);
+		width: calc((5.555vw) * 14 - 3px);
+		height: calc((5.555vw) * 2 - 1px);
+		left: calc((5.555vw + 1px) * 2);
+		top: calc((5.555vw) * 9 + 1px);
 		opacity: 0;
 		.strengthContainer {
 			width: calc(40% - 5.55vw / 2);
@@ -196,10 +196,9 @@ body {
 		}
 	}
 	.errorsDisplayBabyOverlay {
-		width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
-		height: calc(5.555vw * 2 + 1px * (2 - 1));
-		left: calc(1px * 10 + 5.555vw * 2);
-		top: calc(1px + 5.555vw * 11 + 1px * 11);
+		width: calc((5.555vw) * 14 - 3px);
+		height: calc((5.555vw) * 2 - 2px);
+		left: calc((5.555vw + 1px) * 2);
 		display: none;
 		opacity: 0;
 		.textContainer {
@@ -258,9 +257,9 @@ body {
 		}
 	}
 	.bruteForceTimeBabyOverlay {
-		width: calc(5.555vw * 14 + 14 * 1px - 1.5px);
-		height: calc(5.555vw * 5 + 1px * (5 - 1));
-		left: calc(1px * 3 + 5.555vw * 2);
+		width: calc((5.555vw) * 14);
+		height: calc((5.555vw) * 5 - 1px);
+		left: calc((5.555vw + 1px) * 2 - 1px);
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
@@ -356,8 +355,6 @@ body {
 			p {
 				font-size: 1.5vw;
 				width: 85%;
-				// padding: 3% 10% 3% 10%;
-				// background: var(--backgroundColor);
 			}
 		}
 	}
