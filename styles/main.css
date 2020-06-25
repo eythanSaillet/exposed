@@ -227,20 +227,14 @@ body {
         align-items: center; }
         .main .bruteForceTimeBabyOverlay > div .bars .barContainer {
           width: 2.5%;
-          height: 85%; }
+          height: 85%;
+          background: var(--darkPink); }
           .main .bruteForceTimeBabyOverlay > div .bars .barContainer .bar {
             width: 100%;
             height: 100%;
             transform-origin: bottom;
-            transform: scaleY(0); }
-    .main .bruteForceTimeBabyOverlay .oldPassword .barContainer {
-      background: var(--darkRed); }
-      .main .bruteForceTimeBabyOverlay .oldPassword .barContainer .bar {
-        background: var(--red); }
-    .main .bruteForceTimeBabyOverlay .newPassword .barContainer {
-      background: var(--darkPink); }
-      .main .bruteForceTimeBabyOverlay .newPassword .barContainer .bar {
-        background: var(--pink); }
+            transform: scaleY(0);
+            background: var(--pink); }
   .main .dbInfo {
     display: flex;
     justify-content: center;
@@ -285,6 +279,14 @@ body {
     .main .yellowLabelBabyOverlay p {
       font-size: 2.3vw;
       color: var(--yellow);
+      opacity: 0; }
+  .main .greenLabelBabyOverlay {
+    display: flex;
+    align-items: center;
+    pointer-events: none; }
+    .main .greenLabelBabyOverlay p {
+      font-size: 2.3vw;
+      color: var(--green);
       opacity: 0; }
   .main .testBabyOverlay {
     background: lightblue;

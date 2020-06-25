@@ -228,7 +228,7 @@ grid.setup()
 
 let navigation = {
 	input: '',
-	possibleInput: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-%@§'`,:;.{}=ÙÉÈÀ",
+	possibleInput: "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789&()!?/\\*$¥€£#<>+-_%@§'`,:;.{}=ÙÉÈÀ",
 	actualY: 0,
 	isLoading: false,
 	searchErrorsData: {
@@ -240,8 +240,8 @@ let navigation = {
 	},
 	passwordStrengthsSentences: [
 		"Your password is not safe enough ! You should change it as soon as possible. Let's see what you could change to improve it.",
-		'Careful ! Your password could be a lot safer if you added some more characters ... Check out the advices we have for you !',
-		'Nice one, but it could be a little safer. Check out the advices we have for you !',
+		'Careful ! Your password could be a lot safer if you added some more characters ... Check out the advice we have for you !',
+		'Nice one, but it could be a little safer. Check out the advice we have for you !',
 		'Beautiful ! Your data should be safe with this password. Carry on keeping your data safe :3',
 	],
 
@@ -373,44 +373,7 @@ let navigation = {
 	},
 
 	displaySearchInfos() {
-		this.actualY = 6
-
-		// Display loading done
-		grid.displayWord({ x: 10, y: 6, word: 'DONE', minLength: 3, maxLength: 10, delay: 200, color: 2 })
-		setTimeout(() => {
-			grid.setupScrollCallAnimation(15, 6, 600)
-		}, 1100)
-
-		// Unlock scroll
-		document.querySelector('body').style.overflowY = 'visible'
-
-		this.actualY += 3
-
-		// Display password strength
-		let label = document.createElement('p')
-		label.innerHTML = 'PASSWORD TOO EASY'
-		grid.setupBabyOverlay({ x: 2, y: this.actualY - 1, width: 6, height: 1, className: 'redLabelBabyOverlay', content: label })
-		let sentenceIndex
-		this.analyzedPassword.strength > 25 ? (this.analyzedPassword.strength > 50 ? (this.analyzedPassword.strength > 75 ? (sentenceIndex = 3) : (sentenceIndex = 2)) : (sentenceIndex = 1)) : (sentenceIndex = 0)
-		document.querySelector('.passwordResponseBabyOverlay .text').innerHTML = this.passwordStrengthsSentences[sentenceIndex]
-		let displayPasswordStrength = () => {
-			gsap.to(label, 0.4, { opacity: 1 })
-			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.4, { opacity: 1 })
-			gsap.to(document.querySelector('.passwordResponseBabyOverlay .bar'), 1, { width: `${this.analyzedPassword.strength}%` })
-			let number = { value: 0 }
-			let $number = document.querySelector('.passwordResponseBabyOverlay .number')
-			gsap.to(number, 1, {
-				value: this.analyzedPassword.strength,
-				onUpdate: () => {
-					$number.innerHTML = `${Math.round(number.value)}%`
-				},
-			})
-		}
-		scrollDidsplayer.add(8, displayPasswordStrength)
-
-		this.actualY += 4
-
-		// Display number of errors
+		// Count number of errors
 		let numberOfErrors = 0
 		let errors = []
 		if (!this.analyzedPassword.length) {
@@ -434,6 +397,44 @@ let navigation = {
 			errors.push('specialCharacters')
 		}
 
+		this.actualY = 6
+
+		// Display loading done
+		grid.displayWord({ x: 10, y: 6, word: 'DONE', minLength: 3, maxLength: 10, delay: 200, color: 2 })
+		setTimeout(() => {
+			grid.setupScrollCallAnimation(15, 6, 600)
+		}, 1100)
+
+		// Unlock scroll
+		document.querySelector('body').style.overflowY = 'visible'
+
+		this.actualY += 3
+
+		// Display password strength
+		let label = document.createElement('p')
+		numberOfErrors === 0 ? (label.innerHTML = 'SAFE PASSWORD') : (label.innerHTML = 'PASSWORD TOO EASY')
+		grid.setupBabyOverlay({ x: 2, y: this.actualY - 1, width: 6, height: 1, className: numberOfErrors === 0 ? 'greenLabelBabyOverlay' : 'redLabelBabyOverlay', content: label })
+		let sentenceIndex
+		this.analyzedPassword.strength > 25 ? (this.analyzedPassword.strength > 50 ? (numberOfErrors === 0 ? (sentenceIndex = 3) : (sentenceIndex = 2)) : (sentenceIndex = 1)) : (sentenceIndex = 0)
+		document.querySelector('.passwordResponseBabyOverlay .text').innerHTML = this.passwordStrengthsSentences[sentenceIndex]
+		let displayPasswordStrength = () => {
+			gsap.to(label, 0.4, { opacity: 1 })
+			gsap.to(document.querySelector('.passwordResponseBabyOverlay'), 0.4, { opacity: 1 })
+			gsap.to(document.querySelector('.passwordResponseBabyOverlay .bar'), 1, { width: `${this.analyzedPassword.strength}%` })
+			let number = { value: 0 }
+			let $number = document.querySelector('.passwordResponseBabyOverlay .number')
+			gsap.to(number, 1, {
+				value: this.analyzedPassword.strength,
+				onUpdate: () => {
+					$number.innerHTML = `${Math.round(number.value)}%`
+				},
+			})
+		}
+		scrollDidsplayer.add(8, displayPasswordStrength)
+
+		this.actualY += 4
+
+		// Display number of errors
 		let y1 = this.actualY
 		let displayNumberOfErrors = () => {
 			grid.displayWord({ x: 2, y: y1, word: numberOfErrors.toString(), minLength: 3, maxLength: 10, delay: 200 })
@@ -515,8 +516,9 @@ let navigation = {
 		this.actualY += 2
 
 		// Clear the grid behind
+		let yGridClear = errors.length === 0 ? 2 : 5
 		for (let x = 0; x < 14; x++) {
-			for (let y = 0; y < 5; y++) {
+			for (let y = 0; y < yGridClear; y++) {
 				grid.changeGridColor(x + 2, y + this.actualY, 3)
 			}
 		}
@@ -524,6 +526,11 @@ let navigation = {
 		// Position the overlay
 		let bruteForceTimeBabyOverlay = document.querySelector('.bruteForceTimeBabyOverlay')
 		bruteForceTimeBabyOverlay.style.top = `calc((5.555vw) * ${this.actualY} + 1px)`
+
+		// Doesn't display newPassword if there is no error
+		if (errors.length === 0) {
+			bruteForceTimeBabyOverlay.querySelector('.newPassword').style.display = 'none'
+		}
 		// Display information
 		document.querySelector('.bruteForceTimeBabyOverlay .oldPassword .password').innerHTML = this.analyzedPassword.password
 		document.querySelector('.bruteForceTimeBabyOverlay .newPassword .password').innerHTML = this.analyzedPassword.correction.newPassword
@@ -550,27 +557,29 @@ let navigation = {
 					},
 				}
 			)
-			gsap.fromTo(
-				newPasswordsBars,
-				{
-					scaleY: 0,
-				},
-				{
-					duration: this.analyzedPassword.correction.bruteForceTime / 30,
-					scaleY: 1,
-					repeat: -1,
-					ease: Linear.easeNone,
-					stagger: {
-						each: this.analyzedPassword.correction.bruteForceTime / 30,
+			if (errors.length !== 0) {
+				gsap.fromTo(
+					newPasswordsBars,
+					{
+						scaleY: 0,
 					},
-				}
-			)
+					{
+						duration: this.analyzedPassword.correction.bruteForceTime / 30,
+						scaleY: 1,
+						repeat: -1,
+						ease: Linear.easeNone,
+						stagger: {
+							each: this.analyzedPassword.correction.bruteForceTime / 30,
+						},
+					}
+				)
+			}
 			// Display the overlay
 			gsap.to(bruteForceTimeBabyOverlay, 0.4, { opacity: 1 })
 		}
 		scrollDidsplayer.add(this.actualY, displayBruteForceTimeBabyOverlay)
 
-		this.actualY += 7
+		errors.length === 0 ? (this.actualY += 4) : (this.actualY += 7)
 
 		for (let i = 0; i < grid.width; i++) {
 			grid.changeGridColor(i, this.actualY, 2)
@@ -636,7 +645,6 @@ let navigation = {
 		// Calculate page height and resize it
 		let pageHeight = 0.05555 * this.actualY * window.innerWidth + 1
 		grid.$grid.style.height = `${pageHeight}px`
-		// grid.$grid.style.overflowY = 'hidden'
 	},
 
 	analyzePassword(input) {

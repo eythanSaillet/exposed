@@ -306,31 +306,33 @@ body {
 				.barContainer {
 					width: 2.5%;
 					height: 85%;
+					background: var(--darkPink);
 					.bar {
 						width: 100%;
 						height: 100%;
 						transform-origin: bottom;
 						transform: scaleY(0);
+						background: var(--pink);
 					}
 				}
 			}
 		}
-		.oldPassword {
-			.barContainer {
-				background: var(--darkRed);
-				.bar {
-					background: var(--red);
-				}
-			}
-		}
-		.newPassword {
-			.barContainer {
-				background: var(--darkPink);
-				.bar {
-					background: var(--pink);
-				}
-			}
-		}
+		// .oldPassword {
+		// 	.barContainer {
+		// 		background: var(--darkRed);
+		// 		.bar {
+		// 			background: var(--red);
+		// 		}
+		// 	}
+		// }
+		// .newPassword {
+		// 	.barContainer {
+		// 		background: var(--darkPink);
+		// 		.bar {
+		// 			background: var(--pink);
+		// 		}
+		// 	}
+		// }
 	}
 	.dbInfo {
 		display: flex;
@@ -385,6 +387,16 @@ body {
 		p {
 			font-size: 2.3vw;
 			color: var(--yellow);
+			opacity: 0;
+		}
+	}
+	.greenLabelBabyOverlay {
+		display: flex;
+		align-items: center;
+		pointer-events: none;
+		p {
+			font-size: 2.3vw;
+			color: var(--green);
 			opacity: 0;
 		}
 	}
