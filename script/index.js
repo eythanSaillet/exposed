@@ -266,7 +266,9 @@ let navigation = {
 		let coord = [2, 3]
 		window.addEventListener('keydown', (_event) => {
 			if (!this.isLoading) {
-				if (_event.code === 'Backspace') {
+				if (_event.code === 'Enter') {
+					this.displaySearch(this.input)
+				} else if (_event.code === 'Backspace') {
 					// Erase
 					this.input = this.input.substr(0, this.input.length - 1)
 					if (coord[0] != refCoord[0]) {
@@ -632,7 +634,7 @@ let navigation = {
 		this.actualY += Math.floor(passwordIndex / 3) + 2
 
 		// Calculate page height and resize it
-		let pageHeight = 0.05555 * this.actualY * window.innerWidth + this.actualY
+		let pageHeight = 0.05555 * this.actualY * window.innerWidth + 1
 		grid.$grid.style.height = `${pageHeight}px`
 		// grid.$grid.style.overflowY = 'hidden'
 	},
